@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",//pasta com o código js compilado
+        "module": "commonjs",//sistema de modulos do js utilizado nos arquivos compilados
+        "target": "ES2019",//versão do javascript que os arquivos compilados vão ter
+        "esModuleInterop": true,//faz com que módulos que utilizem o padrão commonjs(require) sejam usados import/export
+        "allowJs": true,//inclui arquivos de configuração '.js' no código compilado        
+    }
+}
