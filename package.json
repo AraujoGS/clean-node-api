@@ -4,7 +4,8 @@
   "description": "Projeto para estudo de TDD, Clean Architecture, Design Patterns e SOLID.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:staged":"jest"
   },
   "author": "Guilherme AS",
   "license": "ISC",
