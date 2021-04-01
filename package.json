@@ -1,0 +1,11 @@
+{
+  "name": "clean-node-api",
+  "version": "1.0.0",
+  "description": "Projeto para estudo de TDD, Clean Architecture, Design Patterns e SOLID.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Guilherme AS",
+  "license": "ISC"
+}
