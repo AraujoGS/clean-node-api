@@ -16,7 +16,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new Error('Missing param: name'))
   })
   test('deve retornar 400 se o email não for informado', () => {
-    // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
     const sut = new SignUpController()
     const httpRequest = {
       body: {
