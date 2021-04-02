@@ -1,10 +1,14 @@
 import { SignUpController } from './signup'
 import { MissingParamError } from '../errors/missing-param-error'
 
+// sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
+const makeSut = (): SignUpController => {
+  return new SignUpController()
+}
+
 describe('SignUp Controller', () => {
   test('deve retornar 400 se o name não for informado', () => {
-    // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         email: 'any_email@mail.com',
@@ -17,7 +21,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
   test('deve retornar 400 se o email não for informado', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -30,7 +34,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
   test('deve retornar 400 se password não for informado', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -43,7 +47,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('password'))
   })
   test('deve retornar 400 se passwordConfirmation não for informado', () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
