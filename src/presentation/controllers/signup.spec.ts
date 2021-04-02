@@ -1,0 +1,18 @@
+import { SignUpController } from './signup'
+
+describe('SignUp Controller', () => {
+  test('deve retornar 400 se o name não for informado', () => {
+    // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
+    const sut = new SignUpController()
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+  })
+})
