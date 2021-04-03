@@ -4,8 +4,7 @@ import { EmailValidator } from '../protocols'
 
 interface SutTypes {sut: SignUpController, emailValidatorStub: EmailValidator}
 
-// sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
-const makeSut = (): SutTypes => {
+const makeEmailValidator = (): EmailValidator => {
   // Stub é um tipo de mock onde o retorno é um valor chumbado, fixo
   class EmailValidatorStub implements EmailValidator {
     /**
@@ -17,7 +16,23 @@ const makeSut = (): SutTypes => {
       return true
     }
   }
-  const emailValidatorStub = new EmailValidatorStub()
+
+  return new EmailValidatorStub()
+}
+
+const makeEmailValidatorWithError = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+      throw new Error()
+    }
+  }
+
+  return new EmailValidatorStub()
+}
+
+// sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
+const makeSut = (): SutTypes => {
+  const emailValidatorStub = makeEmailValidator()
   const sut = new SignUpController(emailValidatorStub)
   return {
     sut,
@@ -109,12 +124,7 @@ describe('SignUp Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
   test('deve retornar 500 se o EmailValidator lançar uma exceção', () => {
-    class EmailValidatorStub implements EmailValidator {
-      isValid (email: string): boolean {
-        throw new Error()
-      }
-    }
-    const emailValidatorStub = new EmailValidatorStub()
+    const emailValidatorStub = makeEmailValidatorWithError()
     const sut = new SignUpController(emailValidatorStub)
     const httpRequest = {
       body: {
