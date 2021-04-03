@@ -7,7 +7,7 @@ interface SutTypes {sut: SignUpController, emailValidatorStub: EmailValidator}
 
 // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
 const makeSut = (): SutTypes => {
-  // Padrão Stub, tipo de mock onde o retorno é um valor chumbado, fixo
+  // Stub é um tipo de mock onde o retorno é um valor chumbado, fixo
   class EmailValidatorStub implements EmailValidator {
     /**
      * uma boa prática em teste unitário, é que o mock retorne o caminho feliz.
@@ -86,7 +86,7 @@ describe('SignUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@mail.com',
+        email: 'invalid_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password'
       }
@@ -94,5 +94,19 @@ describe('SignUp Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+  })
+  test('deve chamar o EmailValidator com o email correto, ou seja, o dado que envio no request deve realmente ser utilizado', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
