@@ -38,4 +38,17 @@ describe('DbAddAccount Usecase', () => {
     await sut.add(accountData)
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
   })
+  test('Deve lançar qualquer exceção que ocorra no encrypter e não tratar na classe', async () => {
+    const { sut, encrypterStub } = makeSut()
+    // mockando o retorno do método para lançar uma exceção
+    jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+    // pegando a promise retornada para realizar a asserção sobre ela
+    const promise = sut.add(accountData)
+    await expect(promise).rejects.toThrow()
+  })
 })
