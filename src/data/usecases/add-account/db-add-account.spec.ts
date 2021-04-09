@@ -1,4 +1,4 @@
-import { Encrypter } from './db-add-account-protocols'
+import { Encrypter, AddAccountModel, AccountModel, AddAccountRepository } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
 
 const makeEncrypter = (): Encrypter => {
@@ -11,18 +11,45 @@ const makeEncrypter = (): Encrypter => {
   return new EncryptStub()
 }
 
+const makeAddAccountRepository = (): AddAccountRepository => {
+  /**
+   * A classe concreta que vai implementar esse protocolo vai estar dentro da infra layer.
+   * Por convenção da clean architecture classes da infra layer não podem acessar modelos do
+   * domain layer.
+   * Para esses casos pode se manter o acesso das classes ou replicar os modelos na infra layer.
+   * Deve-se pesar a melhor opção para o projeto.
+   */
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (account: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'hashed_password'
+      }
+
+      return await new Promise(resolve => resolve(fakeAccount))
+    }
+  }
+
+  return new AddAccountRepositoryStub()
+}
+
 interface SutTypes {
   sut: DbAddAccount
   encrypterStub: Encrypter
+  addAccountRepositoryStub: AddAccountRepository
 }
 
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter()
-  const sut = new DbAddAccount(encrypterStub)
+  const addAccountRepositoryStub = makeAddAccountRepository()
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
 
   return {
     sut,
-    encrypterStub
+    encrypterStub,
+    addAccountRepositoryStub
   }
 }
 
@@ -50,5 +77,20 @@ describe('DbAddAccount Usecase', () => {
     // pegando a promise retornada para realizar a asserção sobre ela
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
+  })
+  test('Deve chamar o AddAccountRepository passando os valores corretos', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+    await sut.add(accountData)
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password'
+    })
   })
 })
