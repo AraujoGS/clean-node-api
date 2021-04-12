@@ -9,6 +9,7 @@ module.exports = {
   ], // Quero cobertura de teste em todos os arquivos dentro de src e que sejam ts
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
+  preset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
   }
