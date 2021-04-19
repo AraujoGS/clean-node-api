@@ -2,7 +2,10 @@ module.exports = {
   roots: ['<rootDir>/src'], // diretorio raiz do projeto
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/main/**',
+    '!<rootDir>/src/main/config/**',
+    '!<rootDir>/src/main/factories/**',
+    '!<rootDir>/src/main/adapters/**',
+    '!<rootDir>/src/main/server.ts',
     '!<rootDir>/src/**/*-protocols.ts',
     '!<rootDir>/**/protocols/**',
     '!<rootDir>/**/test/**'
