@@ -1,24 +1,8 @@
 import { SignUpController } from './signup'
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
-import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
+import { MissingParamError, ServerError } from '../../errors'
+import { AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
 import { HttpRequest } from '../../protocols'
 import { ok, internalServerError, badRequest } from '../../helpers/http-helper'
-
-const makeEmailValidator = (): EmailValidator => {
-  // Stub é um tipo de mock onde o retorno é um valor chumbado, fixo
-  class EmailValidatorStub implements EmailValidator {
-    /**
-     * uma boa prática em teste unitário, é que o mock retorne o caminho feliz.
-     * deve ser interceptada sua execução e modificado o valor para falhar somente
-     * no teste necessario
-     */
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-
-  return new EmailValidatorStub()
-}
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
@@ -57,48 +41,21 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'valid_password'
 })
 
-interface SutTypes {sut: SignUpController, emailValidatorStub: EmailValidator, addAccountStub: AddAccount, validationStub: Validation}
+interface SutTypes {sut: SignUpController, addAccountStub: AddAccount, validationStub: Validation}
 
 // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator()
   const addAccountStub = makeAddAccount()
   const validationStub = makeValidation()
-  const sut = new SignUpController(emailValidatorStub, addAccountStub, validationStub)
+  const sut = new SignUpController(addAccountStub, validationStub)
   return {
     sut,
-    emailValidatorStub,
     addAccountStub,
     validationStub
   }
 }
 
 describe('SignUp Controller', () => {
-  test('deve retornar 400 se o email não for válido', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-    // utilizando o jest para interceptar a execução do método 'isValid' e alterando seu valor chumbado para false
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-    const httpRequest = makeFakeAnyRequest()
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
-  })
-  test('deve chamar o EmailValidator com o email correto, ou seja, o dado que envio no request deve realmente ser utilizado', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
-    const httpRequest = makeFakeAnyRequest()
-    await sut.handle(httpRequest)
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
-  })
-  test('deve retornar 500 se o EmailValidator lançar uma exceção', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-    // Interceptando o emailValidatorStub.isValid e modificando sua implementação
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
-    })
-    const httpRequest = makeFakeAnyRequest()
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(internalServerError(new ServerError(null)))
-  })
   test('deve retornar 500 se o AddAccount lançar uma exceção', async () => {
     const { sut, addAccountStub } = makeSut()
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
