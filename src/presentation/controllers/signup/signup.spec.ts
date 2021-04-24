@@ -74,19 +74,6 @@ const makeSut = (): SutTypes => {
 }
 
 describe('SignUp Controller', () => {
-  test('deve retornar 400 se as senhas informadas são diferentes', async () => {
-    const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'invalid_password'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
-  })
   test('deve retornar 400 se o email não for válido', async () => {
     const { sut, emailValidatorStub } = makeSut()
     // utilizando o jest para interceptar a execução do método 'isValid' e alterando seu valor chumbado para false
