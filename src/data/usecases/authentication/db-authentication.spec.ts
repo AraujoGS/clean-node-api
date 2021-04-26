@@ -1,12 +1,5 @@
 import { DbAuthentication } from './db-authentication'
-import {
-  AccountModel,
-  AuthenticationModel,
-  HashComparer,
-  TokenGenerator,
-  LoadAccountByEmailRepository,
-  UpdateAccessTokenRepository
-} from './db-authentication-protocols'
+import { AccountModel, AuthenticationModel, HashComparer, TokenGenerator, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from './db-authentication-protocols'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
