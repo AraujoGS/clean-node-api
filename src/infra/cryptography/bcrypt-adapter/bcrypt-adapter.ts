@@ -8,10 +8,7 @@ export class BcryptAdapter implements Hasher, HashComparer {
    * injetada no construtor da classe que implementa o Bcrypt e não na interface
    * que ele assina
   */
-  private readonly salt: number
-  constructor (salt: number) {
-    this.salt = salt
-  }
+  constructor (private readonly salt: number) {}
 
   async hash (value: string): Promise<string> {
     const hash = await bcrypt.hash(value, 12)
