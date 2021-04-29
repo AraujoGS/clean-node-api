@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { adaptRoutes } from '../adapters/express/express-routes-adapter'
 import { makeSignUpController } from '../factories/signup/signup-factory'
+import { makeLoginController } from '../factories/login/login-factory'
 
 /**
  * Agrupo nesse arquivo tudo ligado a autenticação, poderia criar um arquivo por rota, mas por
@@ -9,4 +10,5 @@ import { makeSignUpController } from '../factories/signup/signup-factory'
 
 export default (router: Router): void => {
   router.post('/signup', adaptRoutes(makeSignUpController()))
+  router.post('/login', adaptRoutes(makeLoginController()))
 }
