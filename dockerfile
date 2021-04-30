@@ -6,9 +6,3 @@ WORKDIR /usr/src/clean-node-api
 COPY ./package.json .
 # executando o comando de instalação dos pacotes no meu docker, somente dependências de produção
 RUN npm i --only=prod
-# copiando a pasta dist gerada no meu build para uma pasta no container
-COPY ./dist ./dist
-# informar qual porta meu projeto vai estar exposto
-EXPOSE 5000
-# executando o projeto
-CMD npm start

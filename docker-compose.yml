@@ -1,0 +1,32 @@
+# versão do compose, recomenda-se utilizar a mais recente sempre 
+version: "3"
+# listagem dos containers que vou utilizar
+services:
+  # definindo uma dependência do meu projeto 
+  mongo: 
+    # nome do container
+    container_name: mongo-container
+    # setando a imagem que essa dependência vai usar
+    image: mongo:4.4.5 # mais versões: https://hub.docker.com/_/mongo
+    # caso essa imagem caia ela sobe novamente
+    restart: always
+    # recurso para não perder meus dados salvos no container, mapeio uma pasta do meu host para o meu docker e persisto os dados que estão nele
+    volumes: 
+      - ./data:/data/db # nome da pasta que uso para mapear: nome da pasta que o mongoDb armazena coloca os dados (sempre caminho absoluto)
+    ports: 
+      - "27017:27017" # mapeando a porta do meu container para a minha máquina
+  api:
+    container_name: api-container
+    # indico onde está o dockerfile  da minha aplicação
+    build: . 
+    # quando utilizo build não consigo nomear a imagem, então utilizo comando image para nomear então para baixar algo do dockerHub
+    restart: always
+    image: clean-node-api
+    # indico um comando para ser executado após subir meu container
+    command: npm start
+    volumes: 
+      - ./dist:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.
+    ports:
+      - "5050:5050"
+    links: 
+      - mongo
