@@ -23,10 +23,12 @@ services:
     restart: always
     image: clean-node-api
     # indico um comando para ser executado após subir meu container
-    command: npm start
+    command: npm run debug
     volumes: 
-      - ./dist:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.
+      - ./dist:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.      
+      - ./package.json:/usr/src/clean-node-api/package.json       
     ports:
       - "5050:5050"
+      - "9222:9222" # abrindo a porta usada no debug
     links: 
       - mongo
