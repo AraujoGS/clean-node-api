@@ -16,14 +16,12 @@ services:
     ports: 
       - "27017:27017" # mapeando a porta do meu container para a minha máquina
   api:
-    container_name: api-container
-    # indico onde está o dockerfile  da minha aplicação
-    build: . 
-    # quando utilizo build não consigo nomear a imagem, então utilizo comando image para nomear então para baixar algo do dockerHub
+    container_name: api-container        
+    image: node:14
+    working_dir: /usr/src/clean-node-api
     restart: always
-    image: clean-node-api
     # indico um comando para ser executado após subir meu container
-    command: npm run debug
+    command: bash -c "npm i --only=prod && npm run debug"
     volumes: 
       - ./dist:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.      
       - ./package.json:/usr/src/clean-node-api/package.json       
