@@ -23,7 +23,8 @@ services:
     # indico um comando para ser executado após subir meu container
     command: bash -c "npm i --only=prod && npm run debug"
     volumes: 
-      - ./dist:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.      
+      # a barra indica que uma alteração em algum dos arquivos da pasta dist gera alteração tbm na dist do container
+      - ./dist/:/usr/src/clean-node-api/dist # garanto que caso eu rode npm build os arquivos na dist do container serão alterados independente do cache dos containers.      
       - ./package.json:/usr/src/clean-node-api/package.json       
     ports:
       - "5050:5050"
