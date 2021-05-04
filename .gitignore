@@ -4,4 +4,5 @@ coverage
 globalConfig.json
 src/main/config/env-default.ts
 data
+!src/data
 .vscode

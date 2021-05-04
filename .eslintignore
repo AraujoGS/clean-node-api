@@ -3,5 +3,5 @@ dist
 coverage
 globalConfig.json
 src/main/config/env-default.ts
-data
+./data
 .vscode
