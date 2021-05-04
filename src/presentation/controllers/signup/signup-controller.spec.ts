@@ -104,7 +104,7 @@ describe('SignUp Controller', () => {
     const { sut } = makeSut()
     const httpRequest = makeFakeAnyRequest()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(ok(makeFakeAccount()))
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
   test('deve retornar 400 so o Validation retornar algum erro', async () => {
     const { sut, validationStub } = makeSut()
