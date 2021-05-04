@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { adaptRoutes } from '../adapters/express/express-routes-adapter'
-import { makeSignUpController } from '../factories/signup/signup-factory'
-import { makeLoginController } from '../factories/login/login-factory'
+import { makeSignUpController } from '../factories/controllers/signup/signup-factory'
+import { makeLoginController } from '../factories/controllers/login/login-factory'
 
 /**
  * Agrupo nesse arquivo tudo ligado a autenticação, poderia criar um arquivo por rota, mas por
