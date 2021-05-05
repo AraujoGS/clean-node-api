@@ -34,6 +34,23 @@ describe('Login Routes', () => {
         })
         .expect(200)
     })
+    test('Deve retornar 403 no signup', async () => {
+      const password = await hash('123', 12)
+      await accountCollection.insertOne({
+        name: 'Guilherme',
+        email: 'guilhermearaujo421@gmail.com',
+        password
+      })
+      await request(app)
+        .post('/api/signup')
+        .send({
+          name: 'Guilherme',
+          email: 'guilhermearaujo421@gmail.com',
+          password: '123',
+          passwordConfirmation: '123'
+        })
+        .expect(403)
+    })
   })
 
   describe('POST /login', () => {
