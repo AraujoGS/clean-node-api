@@ -1,4 +1,4 @@
-import { badRequest, internalServerError } from '../../../helpers/http/http-helper'
+import { badRequest, created, internalServerError } from '../../../helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, Validation, AddSurvey } from './add-survey-controller-protocols'
 export class AddSurveyController implements Controller {
   constructor (
@@ -17,7 +17,7 @@ export class AddSurveyController implements Controller {
         question,
         answers
       })
-      return null
+      return created()
     } catch (error) {
       return internalServerError(error)
     }
