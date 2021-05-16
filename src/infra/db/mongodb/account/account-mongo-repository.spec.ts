@@ -95,16 +95,43 @@ describe('Account Mongo Repository', () => {
       expect(account.email).toBe('any_email@mail.com')
       expect(account.password).toBe('any_password')
     })
-    test('Deve retornar uma conta com sucesso no loadByToken usando também a role', async () => {
+    test('Deve retornar uma conta com sucesso no loadByToken com uma role de admin', async () => {
       const sut = makeSut()
       await accountCollection.insertOne(({
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
         accessToken: 'any_token',
-        role: 'any_role'
+        role: 'admin'
       }))
-      const account = await sut.loadByToken('any_token', 'any_role')
+      const account = await sut.loadByToken('any_token', 'admin')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('any_password')
+    })
+    test('Deve retornar null no loadByToken quando exige role de admin, mas o usuário não possui', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne(({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        accessToken: 'any_token'
+      }))
+      const account = await sut.loadByToken('any_token', 'admin')
+      expect(account).toBeFalsy()
+    })
+    test('Deve retornar uma conta com sucesso no loadByToken com uma role de admin, quando não preciso de permissão admin', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne(({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'admin'
+      }))
+      const account = await sut.loadByToken('any_token')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
