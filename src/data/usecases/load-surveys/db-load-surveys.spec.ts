@@ -63,4 +63,10 @@ describe('DbLoadSurveys UseCase', () => {
     const surveys = await sut.load()
     expect(surveys).toEqual(makeFakeSurveys())
   })
+  test('deve retornar vazio caso o LoadSurveysRepository não encontre nenhuuma enquete', async () => {
+    const { sut, loadSurveysRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockReturnValueOnce(new Promise(resolve => resolve([])))
+    const surveys = await sut.load()
+    expect(surveys).toEqual([])
+  })
 })
