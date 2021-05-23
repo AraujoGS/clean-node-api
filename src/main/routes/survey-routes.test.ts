@@ -5,10 +5,50 @@ import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import env from '../config/env'
 
-describe('Survey Routes', () => {
-  let surveyCollection: Collection
-  let accountCollection: Collection
+let surveyCollection: Collection
+let accountCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const res = await accountCollection.insertOne({
+    name: 'Guilherme',
+    email: 'guilhermearaujo421@gmail.com',
+    password: '123',
+    role: 'admin'
+  })
+  const id = res.ops[0]._id
+  const accessToken = sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
+const populateSurveysCollection = async (): Promise<void> => {
+  await surveyCollection.insertMany([
+    {
+      question: 'any_question',
+      answers: [{
+        image: 'any_image',
+        answer: 'any_answer'
+      }],
+      date: new Date()
+    },
+    {
+      question: 'other_question',
+      answers: [{
+        image: 'other_image',
+        answer: 'other_answer'
+      }],
+      date: new Date()
+    }
+  ])
+}
+
+describe('Survey Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -40,21 +80,7 @@ describe('Survey Routes', () => {
         .expect(403)
     })
     test('Deve retornar 201 em caso de sucesso', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'Guilherme',
-        email: 'guilhermearaujo421@gmail.com',
-        password: '123',
-        role: 'admin'
-      })
-      const id = res.ops[0]._id
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -78,38 +104,8 @@ describe('Survey Routes', () => {
         .expect(403)
     })
     test('Deve retornar 200 em caso de sucesso', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'Guilherme',
-        email: 'guilhermearaujo421@gmail.com',
-        password: '123'
-      })
-      const id = res.ops[0]._id
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
-      await surveyCollection.insertMany([
-        {
-          question: 'any_question',
-          answers: [{
-            image: 'any_image',
-            answer: 'any_answer'
-          }],
-          date: new Date()
-        },
-        {
-          question: 'other_question',
-          answers: [{
-            image: 'other_image',
-            answer: 'other_answer'
-          }],
-          date: new Date()
-        }
-      ])
+      const accessToken = await makeAccessToken()
+      await populateSurveysCollection()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
