@@ -70,4 +70,12 @@ describe('Survey Routes', () => {
         .expect(201)
     })
   })
+
+  describe('GET /surveys', () => {
+    test('Deve retornar 403 porque o accessToken não foi informado', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
+    })
+  })
 })
