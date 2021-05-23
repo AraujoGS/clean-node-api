@@ -5,3 +5,4 @@ src/main/config/env-default.ts
 data
 !src/data
 .vscode
+globalConfig.json

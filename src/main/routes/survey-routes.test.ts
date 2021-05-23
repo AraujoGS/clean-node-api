@@ -10,7 +10,7 @@ describe('Survey Routes', () => {
   let accountCollection: Collection
 
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb+srv://testHeroku123:testHeroku123@cluster0.jmdam.mongodb.net/clean-node-api?retryWrites=true&w=majority')
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   afterAll(async () => {
