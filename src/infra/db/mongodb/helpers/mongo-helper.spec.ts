@@ -2,7 +2,7 @@ import { MongoHelper as sut } from './mongo-helper'
 
 describe('Mongo Helper', () => {
   beforeAll(async () => {
-    await sut.connect('mongodb+srv://testHeroku123:testHeroku123@cluster0.jmdam.mongodb.net/clean-node-api?retryWrites=true&w=majority')
+    await sut.connect(process.env.MONGO_URL)
   })
   afterAll(async () => {
     await sut.disconnect()

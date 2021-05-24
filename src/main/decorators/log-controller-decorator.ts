@@ -4,8 +4,8 @@
  * É envolver um objeto com outro do mesmo tipo (Liskov Principle) e acrescer comportamentos a ele
  */
 
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 export class LogControllerDecorator implements Controller {
   constructor (

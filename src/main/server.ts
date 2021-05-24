@@ -3,8 +3,9 @@
  * faz a composição de tudo que foi criado, realiza as injeções de dependência
  * necessárias e sobe nosso servidor (API)
 */
+import 'module-alias/register'
 import env from './config/env'
-import { MongoHelper } from '../infra/db/mongodb/helpers/mongo-helper'
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 
 MongoHelper.connect(env.mongoUri)
   .then(async () => {

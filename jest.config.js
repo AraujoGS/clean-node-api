@@ -12,6 +12,9 @@ module.exports = {
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
   preset: '@shelf/jest-mongodb',
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1'
+  },
   transform: {
     '.+\\.ts$': 'ts-jest'
   }

@@ -1,4 +1,4 @@
-import { AccountModel } from '../models/account'
+import { AccountModel } from '@/domain/models/account'
 
 // Essa interface está diretamente relacionada a esse use case AddAccount por esse motivo foi colocada no mesmo arquivo.
 export interface AddAccountModel {
