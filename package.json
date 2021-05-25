@@ -1,6 +1,6 @@
 {
   "name": "clean-node-api",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Projeto para estudo de TDD, Clean Architecture, Design Patterns e SOLID.",
   "main": "index.js",
   "scripts": {
