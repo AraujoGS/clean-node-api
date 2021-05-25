@@ -18,7 +18,7 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-interface SutTypes {sut: EmailValidation, emailValidatorStub: EmailValidator}
+type SutTypes = {sut: EmailValidation, emailValidatorStub: EmailValidator}
 
 // sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
 const makeSut = (): SutTypes => {

@@ -1,12 +1,12 @@
 import { AccountModel } from '@/domain/models/account'
 
-// Essa interface está diretamente relacionada a esse use case AddAccount por esse motivo foi colocada no mesmo arquivo.
-export interface AddAccountModel {
+// Está type está diretamente relacionada a esse use case AddAccount por esse motivo foi colocada no mesmo arquivo.
+export type AddAccountModel = {
   name: string
   email: string
   password: string
 }
 
-export interface AddAccount {
+export type AddAccount = {
   add: (account: AddAccountModel) => Promise<AccountModel>
 }
