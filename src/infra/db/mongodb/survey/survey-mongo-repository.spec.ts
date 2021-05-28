@@ -6,7 +6,7 @@ const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
-describe('Account Mongo Repository', () => {
+describe('Survey Mongo Repository', () => {
   let surveyCollection: Collection
 
   beforeAll(async () => {
