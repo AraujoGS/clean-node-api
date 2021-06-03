@@ -4,8 +4,8 @@
  * Os imports serão direto do domain
  */
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountModel } from '@/domain/usecases/account/add-account'
+import { AddAccountParams } from '@/domain/usecases/account/add-account'
 
 export interface AddAccountRepository {
-  add: (account: AddAccountModel) => Promise<AccountModel>
+  add: (account: AddAccountParams) => Promise<AccountModel>
 }
