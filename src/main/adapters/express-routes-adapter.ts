@@ -4,7 +4,9 @@ import { Request, RequestHandler, Response } from 'express'
 export const adaptRoutes = (controller: Controller): RequestHandler => {
   return async (req: Request, res: Response): Promise<void> => {
     const httpRequest: HttpRequest = {
-      body: req.body
+      body: req.body,
+      params: req.params,
+      accountId: req.accountId
     }
     const httpResponse = await controller.handle(httpRequest)
     if ([200, 201, 203, 204].includes(httpResponse.statusCode)) {
