@@ -6,7 +6,7 @@ export const mockController = (): Controller => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
       const httpResponse: HttpResponse = ok(mockAccountModel())
-      return await new Promise(resolve => resolve(httpResponse))
+      return await Promise.resolve(httpResponse)
     }
   }
   return new ControllerStub()

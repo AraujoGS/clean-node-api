@@ -36,7 +36,7 @@ describe('DbLoadSurveys UseCase', () => {
   })
   test('deve retornar vazio caso o LoadSurveysRepository não encontre nenhuuma enquete', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockReturnValueOnce(new Promise(resolve => resolve([])))
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockReturnValueOnce(Promise.resolve([]))
     const surveys = await sut.load()
     expect(surveys).toEqual([])
   })

@@ -49,7 +49,7 @@ describe('LogController Decorator', () => {
   test('Deve chamar o LogErrorRepository quando o controller responder com server error', async () => {
     const { sut, controllerStub, logErrorRepositoryStub } = makeSut()
     const error = mockServerError()
-    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise(resolve => resolve(error)))
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(error))
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'logError')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
