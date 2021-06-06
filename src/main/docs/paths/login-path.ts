@@ -23,13 +23,16 @@ export const loginPath = {
         }
       },
       400: {
-        description: 'Erro no cliente'
+        $ref: '#/components/badRequest'
       },
       401: {
-        description: 'Erro na autorização'
+        $ref: '#/components/unauthorized'
+      },
+      404: {
+        $ref: '#/components/notFound'
       },
       500: {
-        description: 'Erro no servidor'
+        $ref: '#/components/internalServerError'
       }
     }
   }
