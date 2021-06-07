@@ -1,6 +1,6 @@
 import { badRequest, unauthorized, internalServerError, notFound, forbidden } from './components'
-import { accountSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
-import { loginPath, loadSurveyPath } from './paths'
+import { accountSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, signUpParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
+import { loginPath, loadSurveyPath, signUpPath } from './paths'
 export default {
   openapi: '3.0.0',
   info: {
@@ -18,11 +18,13 @@ export default {
   }], // podemos agrupar endpoints da documentação criando tags
   paths: {
     '/login': loginPath,
+    '/signup': signUpPath,
     '/surveys': loadSurveyPath
   }, // são os endpoints que estamos documentando
   schemas: {
     account: accountSchema,
     loginParams: loginParamsSchema,
+    signUpParams: signUpParamsSchema,
     survey: surveySchema,
     surveyAnswer: surveyAnswerSchema,
     surveys: surveysSchema,
