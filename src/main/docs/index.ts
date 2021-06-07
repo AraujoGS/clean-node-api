@@ -1,6 +1,6 @@
 import { badRequest, unauthorized, internalServerError, notFound, forbidden } from './components'
-import { accountSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, signUpParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
-import { loginPath, loadSurveyPath, signUpPath } from './paths'
+import { accountSchema, addSurveyParamsSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, signUpParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
+import { loginPath, loadSurveysPath, signUpPath, addSurveyPath } from './paths'
 export default {
   openapi: '3.0.0',
   info: {
@@ -19,7 +19,7 @@ export default {
   paths: {
     '/login': loginPath,
     '/signup': signUpPath,
-    '/surveys': loadSurveyPath
+    '/surveys': { ...loadSurveysPath, ...addSurveyPath } // como os dois endpoints possuem a mesma URL mesclei os arquivos separados
   }, // são os endpoints que estamos documentando
   schemas: {
     account: accountSchema,
@@ -28,6 +28,7 @@ export default {
     survey: surveySchema,
     surveyAnswer: surveyAnswerSchema,
     surveys: surveysSchema,
+    addSurveyParams: addSurveyParamsSchema,
     error: errorSchema
   }, // são os modelos de dados usados nas respostas dos endpoints
   components: {

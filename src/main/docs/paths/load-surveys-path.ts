@@ -1,4 +1,4 @@
-export const loadSurveyPath = {
+export const loadSurveysPath = {
   get: {
     tags: ['Enquete'],
     summary: 'API para listar todas as enquetes',
@@ -15,6 +15,9 @@ export const loadSurveyPath = {
             }
           }
         }
+      },
+      204: {
+        description: 'Sem resultados'
       },
       403: {
         $ref: '#/components/forbidden'
