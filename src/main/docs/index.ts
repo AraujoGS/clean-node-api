@@ -1,6 +1,6 @@
-import { badRequest, unauthorized, internalServerError, notFound } from './components'
-import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
-import { loginPath } from './paths'
+import { badRequest, unauthorized, internalServerError, notFound, forbidden } from './components'
+import { accountSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
+import { loginPath, loadSurveyPath } from './paths'
 export default {
   openapi: '3.0.0',
   info: {
@@ -13,19 +13,29 @@ export default {
   }],
   tags: [{
     name: 'Login'
+  }, {
+    name: 'Enquete'
   }], // podemos agrupar endpoints da documentação criando tags
   paths: {
-    '/login': loginPath
+    '/login': loginPath,
+    '/surveys': loadSurveyPath
   }, // são os endpoints que estamos documentando
   schemas: {
     account: accountSchema,
     loginParams: loginParamsSchema,
+    survey: surveySchema,
+    surveyAnswer: surveyAnswerSchema,
+    surveys: surveysSchema,
     error: errorSchema
   }, // são os modelos de dados usados nas respostas dos endpoints
   components: {
+    securitySchemes: {
+      apiKeyAuth: apiKeyAuthSchema
+    },
     badRequest,
     unauthorized,
     internalServerError,
-    notFound
+    notFound,
+    forbidden
   } // são tipos de respostas que partilham o mesmo schema
 }
