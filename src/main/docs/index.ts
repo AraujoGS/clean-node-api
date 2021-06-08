@@ -1,6 +1,6 @@
-import { badRequest, unauthorized, internalServerError, notFound, forbidden } from './components'
-import { accountSchema, addSurveyParamsSchema, apiKeyAuthSchema, errorSchema, loginParamsSchema, signUpParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema, surveyResultSchema, saveSurveyResultParamsSchema } from './schemas'
-import { loginPath, loadSurveysPath, signUpPath, addSurveyPath, saveSurveyResultPath } from './paths'
+import components from './components'
+import schemas from './schemas'
+import paths from './paths'
 export default {
   openapi: '3.0.0',
   info: {
@@ -16,32 +16,7 @@ export default {
   }, {
     name: 'Enquete'
   }], // podemos agrupar endpoints da documentação criando tags
-  paths: {
-    '/login': loginPath,
-    '/signup': signUpPath,
-    '/surveys': { ...loadSurveysPath, ...addSurveyPath }, // como os dois endpoints possuem a mesma URL mesclei os arquivos separados
-    '/surveys/{surveyId}/results': saveSurveyResultPath
-  }, // são os endpoints que estamos documentando
-  schemas: {
-    account: accountSchema,
-    loginParams: loginParamsSchema,
-    signUpParams: signUpParamsSchema,
-    survey: surveySchema,
-    surveyAnswer: surveyAnswerSchema,
-    surveys: surveysSchema,
-    addSurveyParams: addSurveyParamsSchema,
-    surveyResult: surveyResultSchema,
-    saveSurveyResultParams: saveSurveyResultParamsSchema,
-    error: errorSchema
-  }, // são os modelos de dados usados nas respostas dos endpoints
-  components: {
-    securitySchemes: {
-      apiKeyAuth: apiKeyAuthSchema
-    },
-    badRequest,
-    unauthorized,
-    internalServerError,
-    notFound,
-    forbidden
-  } // são tipos de respostas que partilham o mesmo schema
+  paths, // são os endpoints que estamos documentando
+  schemas, // são os modelos de dados usados nas respostas dos endpoints
+  components // são tipos de respostas que partilham o mesmo schema
 }
