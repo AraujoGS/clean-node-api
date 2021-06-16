@@ -1,6 +1,6 @@
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { MongoHelper, SurveyModel, AccountModel } from './survey-result-mongo-repository-protocols'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -66,15 +66,17 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.surveyId).toEqual(survey.id)
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
     test('Deve atualizar uma resposta de enquete com sucesso', async () => {
       const survey = await mockSurvey()
       const account = await mockAccount()
-      const res = await surveyResultCollection.insertOne({
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date()
       })
@@ -86,8 +88,10 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toEqual(res.ops[0]._id)
-      expect(surveyResult.answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.surveyId).toEqual(survey.id)
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
   })
 })
