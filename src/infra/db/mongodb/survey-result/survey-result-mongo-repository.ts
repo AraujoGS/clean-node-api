@@ -1,6 +1,5 @@
-import { SaveSurveyResultParams, SaveSurveyResultRepository, SurveyResultModel, MongoHelper, QueryBuilder } from './survey-result-mongo-repository-protocols'
+import { SaveSurveyResultParams, SaveSurveyResultRepository, SurveyResultModel, MongoHelper, QueryBuilder, LoadSurveyResultRepository } from './survey-result-mongo-repository-protocols'
 import { ObjectId } from 'mongodb'
-import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
   async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
