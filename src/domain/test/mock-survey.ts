@@ -2,7 +2,7 @@ import { SurveyModel } from '@/domain/models/survey'
 import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 
 export const mockSurveyModel = (): SurveyModel => ({
-  id: 'any_id',
+  id: 'any_survey_id',
   question: 'any_question',
   answers: [{
     answer: 'any_answer'
@@ -15,7 +15,7 @@ export const mockSurveyModel = (): SurveyModel => ({
 
 export const mockSurveysModel = (): SurveyModel[] => ([
   {
-    id: 'any_id',
+    id: 'any_survey_id',
     question: 'any_question',
     answers: [{
       image: 'any_image',
@@ -24,7 +24,7 @@ export const mockSurveysModel = (): SurveyModel[] => ([
     date: new Date()
   },
   {
-    id: 'other_id',
+    id: 'other_survey_id',
     question: 'other_question',
     answers: [{
       image: 'other_image',
