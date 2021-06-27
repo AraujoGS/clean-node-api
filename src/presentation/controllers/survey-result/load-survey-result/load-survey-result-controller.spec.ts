@@ -4,6 +4,7 @@ import { throwError, mockSurveyResultModel } from '@/domain/test'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '@/presentation/test'
 import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, internalServerError, ok } from '@/presentation/helpers/http/http-helper'
+import MockDate from 'mockdate'
 
 const mockRequest = (): HttpRequest => ({
   params: {
@@ -29,6 +30,10 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoadSurveyResult Controller', () => {
+  beforeAll(() => MockDate.set(new Date()))
+
+  afterAll(() => MockDate.reset())
+
   test('deve chamar o LoadSurveyById com os valores corretos', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
