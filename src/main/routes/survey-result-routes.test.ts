@@ -23,10 +23,10 @@ describe('Survey Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('POST /surveys', () => {
+  describe('PUT /surveys/:surveyId/results', () => {
     test('Deve retornar 403 porque o accessToken não foi informado', async () => {
       await request(app)
-        .put('/api/surveys/:surveyId/results')
+        .put(`/api/surveys/${0}/results`)
         .send({
           answer: 'Answer'
         })
@@ -50,6 +50,13 @@ describe('Survey Routes', () => {
           answer: 'any_answer'
         })
         .expect(200)
+    })
+  })
+  describe('GET /surveys/:surveyId/results', () => {
+    test('Deve retornar 403 porque o accessToken não foi informado', async () => {
+      await request(app)
+        .get('/api/surveys/any_id/results')
+        .expect(403)
     })
   })
 })
