@@ -5,7 +5,6 @@ import { mockEmailValidator } from '@/validation/test'
 
 type SutTypes = {sut: EmailValidation, emailValidatorStub: EmailValidator}
 
-// sut - System under test, ou seja, indica qual classe ou arquivo está sendo testado
 const makeSut = (): SutTypes => {
   const emailValidatorStub = mockEmailValidator()
   const sut = new EmailValidation('email', emailValidatorStub)

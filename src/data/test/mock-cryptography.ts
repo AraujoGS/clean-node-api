@@ -2,40 +2,42 @@ import { Hasher } from '@/data/protocols/cryptography/hasher'
 import { HashComparer } from '@/data/protocols/cryptography/hash-comparer'
 import { Decrypter } from '@/data/protocols/cryptography/decrypter'
 import { Encrypter } from '@/data/protocols/cryptography/encrypter'
+import faker from 'faker'
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return await Promise.resolve('hashed_password')
-    }
+export class HasherSpy implements Hasher {
+  hashedPassword: string = faker.datatype.uuid()
+  password: string
+  async hash (value: string): Promise<string> {
+    this.password = value
+    return await Promise.resolve(this.hashedPassword)
   }
-
-  return new HasherStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
+export class HashComparerSpy implements HashComparer {
+  private readonly isValid: boolean = true
+  comparedValue: string
+  hash: string
+  async compare (value: string, hash: string): Promise<boolean> {
+    this.comparedValue = value
+    this.hash = hash
+    return await Promise.resolve(this.isValid)
   }
-  return new HashComparerStub()
 }
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
-    }
+export class DecrypterSpy implements Decrypter {
+  private readonly decryptedValue: string = faker.datatype.string(10)
+  encryptedValue: string
+  async decrypt (value: string): Promise<string> {
+    this.encryptedValue = value
+    return await Promise.resolve(this.decryptedValue)
   }
-  return new DecrypterStub()
 }
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
+export class EncrypterSpy implements Encrypter {
+  encryptedValue: string = faker.datatype.string(10)
+  value: string
+  async encrypt (value: string): Promise<string> {
+    this.value = value
+    return await Promise.resolve(this.encryptedValue)
   }
-  return new EncrypterStub()
 }

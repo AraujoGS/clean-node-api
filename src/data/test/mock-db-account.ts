@@ -6,48 +6,41 @@ import { AccountModel } from '@/domain/models/account'
 import { mockAccountModel } from '@/domain/test'
 import { AddAccountParams } from '@/domain/usecases/account/add-account'
 
-export const mockAddAccountRepository = (): AddAccountRepository => {
-  /**
-   * A classe concreta que vai implementar esse protocolo vai estar dentro da infra layer.
-   * Por convenção da clean architecture classes da infra layer não podem acessar modelos do
-   * domain layer.
-   * Para esses casos pode se manter o acesso das classes ou replicar os modelos na infra layer.
-   * Deve-se pesar a melhor opção para o projeto.
-   */
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      const fakeAccount = mockAccountModel()
-
-      return await Promise.resolve(fakeAccount)
-    }
+export class AddAccountRepositorySpy implements AddAccountRepository {
+  private readonly account = mockAccountModel()
+  accountParams: AddAccountParams
+  async add (account: AddAccountParams): Promise<AccountModel> {
+    this.accountParams = account
+    return await Promise.resolve(this.account)
   }
-
-  return new AddAccountRepositoryStub()
 }
 
-export const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
+  account = mockAccountModel()
+  email: string
+  async loadByEmail (email: string): Promise<AccountModel> {
+    this.email = email
+    return await Promise.resolve(this.account)
   }
-  return new LoadAccountByEmailRepositoryStub()
 }
 
-export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-  class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken (token: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
+  private readonly account = mockAccountModel()
+  token: string
+  role: string
+  async loadByToken (token: string, role?: string): Promise<AccountModel> {
+    this.token = token
+    this.role = role
+    return await Promise.resolve(this.account)
   }
-  return new LoadAccountByTokenRepositoryStub()
 }
 
-export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (id: string, token: string): Promise<void> {
-      return await Promise.resolve()
-    }
+export class UpdateAccessTokenRepositorySpy implements UpdateAccessTokenRepository {
+  id: string
+  token: string
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    this.id = id
+    this.token = token
+    return await Promise.resolve()
   }
-  return new UpdateAccessTokenRepositoryStub()
 }
