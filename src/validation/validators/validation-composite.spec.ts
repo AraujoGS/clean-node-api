@@ -1,37 +1,36 @@
 import { ValidationComposite } from './validation-composite'
 import { MissingParamError } from '@/presentation/errors'
-import { Validation } from '@/presentation/protocols'
-import { mockValidation } from '@/validation/test'
+import { ValidationSpy } from '@/validation/test'
 
 type SutTypes = {
   sut: ValidationComposite
-  validationStubs: Validation[]
+  validationSpys: ValidationSpy[]
 }
 
 const makeSut = (): SutTypes => {
-  const validationStubs = [
-    mockValidation(),
-    mockValidation()
+  const validationSpys = [
+    new ValidationSpy(),
+    new ValidationSpy()
   ]
-  const sut = new ValidationComposite(validationStubs)
+  const sut = new ValidationComposite(validationSpys)
   return {
     sut,
-    validationStubs
+    validationSpys
   }
 }
 
 describe('Validation Composite', () => {
   test('deve retornar erro quando alguma das validações do composite retornar erro', () => {
-    const { sut, validationStubs } = makeSut()
+    const { sut, validationSpys } = makeSut()
     // independente se a primeira ou a segunda validação falhar, um erro é retornado
-    jest.spyOn(validationStubs[1], 'validate').mockReturnValueOnce(new MissingParamError('field'))
+    jest.spyOn(validationSpys[1], 'validate').mockReturnValueOnce(new MissingParamError('field'))
     const error = sut.validate({ field: 'any_field' })
     expect(error).toEqual(new MissingParamError('field'))
   })
   test('deve retornar o primeiro erro que acontecer nas validações', () => {
-    const { sut, validationStubs } = makeSut()
-    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error())
-    jest.spyOn(validationStubs[1], 'validate').mockReturnValueOnce(new MissingParamError('field'))
+    const { sut, validationSpys } = makeSut()
+    jest.spyOn(validationSpys[0], 'validate').mockReturnValueOnce(new Error())
+    jest.spyOn(validationSpys[1], 'validate').mockReturnValueOnce(new MissingParamError('field'))
     const error = sut.validate({ field: 'any_field' })
     expect(error).toEqual(new Error())
   })

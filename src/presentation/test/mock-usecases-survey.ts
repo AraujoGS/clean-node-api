@@ -3,20 +3,19 @@ import { mockSurveysModel } from '@/domain/test'
 import { AddSurvey, AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { LoadSurveys } from '@/domain/usecases/survey/load-surveys'
 
-export const mockAddSurvey = (): AddSurvey => {
-  class AddSurveyStub implements AddSurvey {
-    async add (data: AddSurveyParams): Promise<void> {
-      return await Promise.resolve()
-    }
+export class AddSurveySpy implements AddSurvey {
+  addSurveyData: AddSurveyParams
+  async add (data: AddSurveyParams): Promise<void> {
+    this.addSurveyData = data
+    return await Promise.resolve()
   }
-  return new AddSurveyStub()
 }
 
-export const mockLoadSurveys = (): LoadSurveys => {
-  class LoadSurveysStub implements LoadSurveys {
-    async load (): Promise<SurveyModel[]> {
-      return await Promise.resolve(mockSurveysModel())
-    }
+export class LoadSurveysSpy implements LoadSurveys {
+  surveys = mockSurveysModel()
+  callsCount = 0
+  async load (): Promise<SurveyModel[]> {
+    this.callsCount += 1
+    return await Promise.resolve(this.surveys)
   }
-  return new LoadSurveysStub()
 }

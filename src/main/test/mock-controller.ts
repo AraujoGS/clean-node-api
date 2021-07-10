@@ -2,12 +2,11 @@ import { mockAccountModel } from '@/domain/test'
 import { ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
-export const mockController = (): Controller => {
-  class ControllerStub implements Controller {
-    async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-      const httpResponse: HttpResponse = ok(mockAccountModel())
-      return await Promise.resolve(httpResponse)
-    }
+export class ControllerSpy implements Controller {
+  httpResponse = ok(mockAccountModel())
+  httpRequest: HttpRequest
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+    this.httpRequest = httpRequest
+    return await Promise.resolve(this.httpResponse)
   }
-  return new ControllerStub()
 }
