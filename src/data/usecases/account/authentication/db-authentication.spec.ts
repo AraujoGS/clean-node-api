@@ -46,8 +46,8 @@ describe('DbAuthentication UseCase', () => {
   test('deve retornar null caso o LoadAccountByEmailRepository retorne null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     jest.spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail').mockReturnValueOnce(null)
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBeNull()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
   test('deve chamar o HashComparer com os valores corretos', async () => {
     const { sut, hashComparerSpy } = makeSut()
@@ -65,8 +65,8 @@ describe('DbAuthentication UseCase', () => {
   test('deve retornar null caso o HashComparer retorne false', async () => {
     const { sut, hashComparerSpy } = makeSut()
     jest.spyOn(hashComparerSpy, 'compare').mockReturnValueOnce(Promise.resolve(false))
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBeNull()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
   test('deve chamar o Encrypter com o id correto', async () => {
     const { sut, encrypterSpy } = makeSut()
@@ -81,10 +81,11 @@ describe('DbAuthentication UseCase', () => {
     const promise = sut.auth(data)
     await expect(promise).rejects.toThrow()
   })
-  test('deve retornar o accessToken em caso de sucesso', async () => {
-    const { sut, encrypterSpy } = makeSut()
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBe(encrypterSpy.encryptedValue)
+  test('deve retornar o AuthenticationModel em caso de sucesso', async () => {
+    const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model.accessToken).toBe(encrypterSpy.encryptedValue)
+    expect(model.name).toBe(loadAccountByEmailRepositorySpy.account.name)
   })
   test('deve chamar o UpdateAccessTokenRepository com os valores corretos', async () => {
     const { sut, updateAccessTokenRepositorySpy, encrypterSpy } = makeSut()

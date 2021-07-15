@@ -60,7 +60,7 @@ describe('SignUp Controller', () => {
     const { sut, authenticationSpy } = makeSut()
     const httpRequest = mockRequest()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(ok({ accessToken: authenticationSpy.token }))
+    expect(httpResponse).toEqual(ok(authenticationSpy.authenticationModel))
   })
   test('deve retornar 403 se o email já estiver em uso', async () => {
     const { sut, addAccountSpy } = makeSut()
