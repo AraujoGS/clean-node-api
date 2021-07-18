@@ -24,9 +24,9 @@ export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
 
 export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
   private readonly surveys = mockSurveysModel()
-  callsCount: number = 0
-  async loadAll (): Promise<SurveyModel[]> {
-    this.callsCount += 1
+  accountId: string
+  async loadAll (accountId: string): Promise<SurveyModel[]> {
+    this.accountId = accountId
     return await Promise.resolve(this.surveys)
   }
 }
