@@ -1,6 +1,7 @@
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { MongoHelper, SurveyModel, AccountModel } from './survey-result-mongo-repository-protocols'
 import { Collection, ObjectId } from 'mongodb'
+import faker from 'faker'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -29,9 +30,9 @@ const mockSurvey = async (): Promise<SurveyModel> => {
 
 const mockAccount = async (): Promise<AccountModel> => {
   const res = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password'
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    password: faker.random.words()
   })
 
   return MongoHelper.map(res.ops[0])
@@ -101,6 +102,7 @@ describe('Survey Result Mongo Repository', () => {
     test('Deve retornar as resposta dadas para um enquete', async () => {
       const survey = await mockSurvey()
       const account = await mockAccount()
+      const account2 = await mockAccount()
       await surveyResultCollection.insertMany([{
         surveyId: new ObjectId(survey.id),
         accountId: new ObjectId(account.id),
@@ -113,25 +115,24 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       }, {
         surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
-        answer: survey.answers[1].answer,
-        date: new Date()
-      }, {
-        surveyId: new ObjectId(survey.id),
-        accountId: new ObjectId(account.id),
+        accountId: new ObjectId(account2.id),
         answer: survey.answers[1].answer,
         date: new Date()
       }])
       const sut = makeSut()
-      const surveyResult = await sut.loadBySurveyId(survey.id)
+      const surveyResult = await sut.loadBySurveyId(survey.id, account.id)
+      console.log(surveyResult)
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.surveyId).toEqual(survey.id)
       expect(surveyResult.answers[0].count).toBe(2)
-      expect(surveyResult.answers[0].percent).toBe(50)
-      expect(surveyResult.answers[1].count).toBe(2)
-      expect(surveyResult.answers[1].percent).toBe(50)
+      expect(surveyResult.answers[0].percent).toBe(67)
+      expect(surveyResult.answers[0].isCurrentAccountAnswer).toBe(true)
+      expect(surveyResult.answers[1].count).toBe(1)
+      expect(surveyResult.answers[1].percent).toBe(33)
+      expect(surveyResult.answers[1].isCurrentAccountAnswer).toBe(false)
       expect(surveyResult.answers[2].count).toBe(0)
       expect(surveyResult.answers[2].percent).toBe(0)
+      expect(surveyResult.answers[2].isCurrentAccountAnswer).toBe(false)
     })
   })
 })

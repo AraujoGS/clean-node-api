@@ -36,6 +36,7 @@ describe('DbSaveSurveyResult Usecase', () => {
     const data = mockSaveSurveyResultParams()
     await sut.save(data)
     expect(loadSurveyResultRepositorySpy.surveyId).toBe(data.surveyId)
+    expect(loadSurveyResultRepositorySpy.accountId).toBe(data.accountId)
   })
   test('deve lançar exceção caso algum erro aconteça no SaveSurveyResultRepository', async () => {
     const { sut, saveSurveyResultRepositorySpy } = makeSut()

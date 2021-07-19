@@ -79,7 +79,6 @@ describe('DbAddAccount Usecase', () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     const data = mockAddAccountParams()
     await sut.add(data)
-    console.log(loadAccountByEmailRepositorySpy.email)
     expect(loadAccountByEmailRepositorySpy.email).toBe(data.email)
   })
   test('deve lançar uma exceção caso o LoadAccountByEmailRepository de erro', async () => {

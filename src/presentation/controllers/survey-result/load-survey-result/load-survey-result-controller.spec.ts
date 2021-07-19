@@ -5,8 +5,10 @@ import { LoadSurveyByIdSpy, LoadSurveyResultSpy } from '@/presentation/test'
 import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, internalServerError, ok } from '@/presentation/helpers/http/http-helper'
 import MockDate from 'mockdate'
+import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
+  accountId: faker.datatype.uuid(),
   params: {
     surveyId: 'any_id'
   }
@@ -53,8 +55,10 @@ describe('LoadSurveyResult Controller', () => {
   })
   test('deve chamar o LoadSurveyResult com os valores corretos', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()
-    await sut.handle(mockRequest())
-    expect(loadSurveyResultSpy.surveyId).toBe('any_id')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadSurveyResultSpy.surveyId).toBe(httpRequest.params.surveyId)
+    expect(loadSurveyResultSpy.accountId).toBe(httpRequest.accountId)
   })
   test('deve retornar 500 se o LoadSurveyResult der erro', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()
