@@ -1,45 +1,46 @@
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
+import faker from 'faker'
 
 export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
-  surveyId: 'any_survey_id',
-  accountId: 'any_account_id',
-  answer: 'any_answer',
+  surveyId: faker.datatype.uuid(),
+  accountId: faker.datatype.uuid(),
+  answer: faker.random.words(),
   date: new Date()
 })
 
 export const mockSurveyResultModel = (): SurveyResultModel => ({
-  surveyId: 'any_survey_id',
+  surveyId: faker.datatype.uuid(),
   answers: [{
-    answer: 'any_answer',
-    count: 1,
-    percent: 50,
-    isCurrentAccountAnswer: true
+    answer: faker.random.words(),
+    count: faker.datatype.number(),
+    percent: faker.datatype.number(100),
+    isCurrentAccountAnswer: faker.datatype.boolean()
   }, {
-    answer: 'other_answer',
-    count: 10,
-    percent: 80,
-    image: 'any_image',
-    isCurrentAccountAnswer: false
+    answer: faker.random.words(),
+    count: faker.datatype.number(),
+    percent: faker.datatype.number(100),
+    image: faker.image.imageUrl(),
+    isCurrentAccountAnswer: faker.datatype.boolean()
   }],
   date: new Date(),
-  question: 'any_question'
+  question: faker.random.words()
 })
 
 export const mockEmptySurveyResultModel = (): SurveyResultModel => ({
-  surveyId: 'any_survey_id',
+  surveyId: faker.datatype.uuid(),
   answers: [{
-    answer: 'any_answer',
+    answer: faker.random.words(),
     count: 0,
     percent: 0,
     isCurrentAccountAnswer: false
   }, {
-    answer: 'other_answer',
+    answer: faker.random.words(),
     count: 0,
     percent: 0,
-    image: 'any_image',
+    image: faker.image.imageUrl(),
     isCurrentAccountAnswer: false
   }],
   date: new Date(),
-  question: 'any_question'
+  question: faker.random.words()
 })

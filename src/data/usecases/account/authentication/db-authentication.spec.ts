@@ -45,16 +45,16 @@ describe('DbAuthentication UseCase', () => {
   })
   test('deve retornar null caso o LoadAccountByEmailRepository retorne null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail').mockReturnValueOnce(null)
+    loadAccountByEmailRepositorySpy.account = null
     const model = await sut.auth(mockAuthenticationParams())
     expect(model).toBeNull()
   })
   test('deve chamar o HashComparer com os valores corretos', async () => {
-    const { sut, hashComparerSpy } = makeSut()
+    const { sut, hashComparerSpy, loadAccountByEmailRepositorySpy } = makeSut()
     const data = mockAuthenticationParams()
     await sut.auth(data)
     expect(hashComparerSpy.comparedValue).toBe(data.password)
-    expect(hashComparerSpy.hash).toBe(data.password)
+    expect(hashComparerSpy.hash).toBe(loadAccountByEmailRepositorySpy.account.password)
   })
   test('deve lançar uma exceção caso o HashComparer de erro', async () => {
     const { sut, hashComparerSpy } = makeSut()
@@ -64,15 +64,15 @@ describe('DbAuthentication UseCase', () => {
   })
   test('deve retornar null caso o HashComparer retorne false', async () => {
     const { sut, hashComparerSpy } = makeSut()
-    jest.spyOn(hashComparerSpy, 'compare').mockReturnValueOnce(Promise.resolve(false))
+    hashComparerSpy.isValid = false
     const model = await sut.auth(mockAuthenticationParams())
     expect(model).toBeNull()
   })
   test('deve chamar o Encrypter com o id correto', async () => {
-    const { sut, encrypterSpy } = makeSut()
+    const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
     const data = mockAuthenticationParams()
     await sut.auth(data)
-    expect(encrypterSpy.value).toBe('any_id')
+    expect(encrypterSpy.value).toBe(loadAccountByEmailRepositorySpy.account.id)
   })
   test('deve lançar uma exceção caso o Encrypter de erro', async () => {
     const { sut, encrypterSpy } = makeSut()
@@ -88,10 +88,10 @@ describe('DbAuthentication UseCase', () => {
     expect(model.name).toBe(loadAccountByEmailRepositorySpy.account.name)
   })
   test('deve chamar o UpdateAccessTokenRepository com os valores corretos', async () => {
-    const { sut, updateAccessTokenRepositorySpy, encrypterSpy } = makeSut()
+    const { sut, updateAccessTokenRepositorySpy, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
     const data = mockAuthenticationParams()
     await sut.auth(data)
-    expect(updateAccessTokenRepositorySpy.id).toBe('any_id')
+    expect(updateAccessTokenRepositorySpy.id).toBe(loadAccountByEmailRepositorySpy.account.id)
     expect(updateAccessTokenRepositorySpy.token).toBe(encrypterSpy.encryptedValue)
   })
   test('deve lançar uma exceção caso o UpdateAccessTokenRepository de erro', async () => {

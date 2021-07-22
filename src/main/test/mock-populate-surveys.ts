@@ -1,20 +1,21 @@
 import { Collection } from 'mongodb'
+import faker from 'faker'
 
 export const mockSurveysCollection = async (collection: Collection): Promise<void> => {
   await collection.insertMany([
     {
-      question: 'any_question',
+      question: faker.random.words(),
       answers: [{
-        image: 'any_image',
-        answer: 'any_answer'
+        image: faker.image.imageUrl(),
+        answer: faker.random.words()
       }],
       date: new Date()
     },
     {
-      question: 'other_question',
+      question: faker.random.words(),
       answers: [{
-        image: 'other_image',
-        answer: 'other_answer'
+        image: faker.image.imageUrl(),
+        answer: faker.random.words()
       }],
       date: new Date()
     }

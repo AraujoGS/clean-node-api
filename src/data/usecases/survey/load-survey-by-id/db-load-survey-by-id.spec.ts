@@ -1,7 +1,8 @@
 import { DbLoadSurveyById } from './db-load-survey-by-id'
-import { throwError, mockSurveyModel } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { LoadSurveyByIdRepositorySpy } from '@/data/test'
 import MockDate from 'mockdate'
+import faker from 'faker'
 
 type SutTypes = {
   sut: DbLoadSurveyById
@@ -17,6 +18,8 @@ const makeSut = (): SutTypes => {
   }
 }
 
+const surveyId = faker.datatype.uuid()
+
 describe('DbLoadSurveyById UseCase', () => {
   beforeAll(() => MockDate.set(new Date()))
 
@@ -24,18 +27,18 @@ describe('DbLoadSurveyById UseCase', () => {
 
   test('deve chamar o LoadSurveyByIdRepository', async () => {
     const { sut, loadSurveyByIdRepositorySpy } = makeSut()
-    await sut.loadById('any_id')
-    expect(loadSurveyByIdRepositorySpy.id).toBe('any_id')
+    await sut.loadById(surveyId)
+    expect(loadSurveyByIdRepositorySpy.id).toBe(surveyId)
   })
   test('deve retornar a enquete em caso de sucesso', async () => {
-    const { sut } = makeSut()
-    const survey = await sut.loadById('any_id')
-    expect(survey).toEqual(mockSurveyModel())
+    const { sut, loadSurveyByIdRepositorySpy } = makeSut()
+    const survey = await sut.loadById(surveyId)
+    expect(survey).toEqual(loadSurveyByIdRepositorySpy.survey)
   })
   test('deve lançar exceção caso o LoadSurveyByIdRepository de erro', async () => {
     const { sut, loadSurveyByIdRepositorySpy } = makeSut()
     jest.spyOn(loadSurveyByIdRepositorySpy, 'loadById').mockImplementationOnce(throwError)
-    const promise = sut.loadById('any_id')
+    const promise = sut.loadById(surveyId)
     await expect(promise).rejects.toThrow()
   })
 })

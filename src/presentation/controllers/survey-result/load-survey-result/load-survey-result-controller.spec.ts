@@ -1,6 +1,6 @@
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import { HttpRequest } from './load-survey-result-controller-protocols'
-import { throwError, mockSurveyResultModel } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { LoadSurveyByIdSpy, LoadSurveyResultSpy } from '@/presentation/test'
 import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, internalServerError, ok } from '@/presentation/helpers/http/http-helper'
@@ -10,7 +10,7 @@ import faker from 'faker'
 const mockRequest = (): HttpRequest => ({
   accountId: faker.datatype.uuid(),
   params: {
-    surveyId: 'any_id'
+    surveyId: faker.datatype.uuid()
   }
 })
 
@@ -38,12 +38,13 @@ describe('LoadSurveyResult Controller', () => {
 
   test('deve chamar o LoadSurveyById com os valores corretos', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
-    await sut.handle(mockRequest())
-    expect(loadSurveyByIdSpy.id).toBe('any_id')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadSurveyByIdSpy.id).toBe(httpRequest.params.surveyId)
   })
   test('deve retornar 403 se o LoadSurveyById retornar null', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
-    jest.spyOn(loadSurveyByIdSpy, 'loadById').mockReturnValueOnce(Promise.resolve(null))
+    loadSurveyByIdSpy.survey = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
@@ -67,8 +68,8 @@ describe('LoadSurveyResult Controller', () => {
     expect(httpResponse).toEqual(internalServerError(new Error()))
   })
   test('deve retornar 200 em caso de sucesso', async () => {
-    const { sut } = makeSut()
+    const { sut, loadSurveyResultSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
+    expect(httpResponse).toEqual(ok(loadSurveyResultSpy.surveyResult))
   })
 })

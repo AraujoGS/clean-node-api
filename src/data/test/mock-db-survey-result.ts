@@ -13,7 +13,7 @@ export class SaveSurveyResultRepositorySpy implements SaveSurveyResultRepository
 }
 
 export class LoadSurveyResultRepositorySpy implements LoadSurveyResultRepository {
-  private readonly surveyResult = mockSurveyResultModel()
+  surveyResult = mockSurveyResultModel()
   surveyId: string
   accountId: string
   async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {

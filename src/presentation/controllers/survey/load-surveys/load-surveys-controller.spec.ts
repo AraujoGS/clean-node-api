@@ -1,6 +1,6 @@
 import { LoadSurveysController } from './load-surveys-controller'
 import { HttpRequest } from './load-surveys-controller-protocols'
-import { throwError, mockSurveysModel } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { internalServerError, ok, noContent } from '@/presentation/helpers/http/http-helper'
 import { LoadSurveysSpy } from '@/presentation/test'
 import MockDate from 'mockdate'
@@ -34,13 +34,13 @@ describe('LoadSurveys Controller', () => {
     expect(loadSurveysSpy.accountId).toBe(httpRequest.accountId)
   })
   test('deve retornar 200 em caso de sucesso', async () => {
-    const { sut } = makeSut()
+    const { sut, loadSurveysSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockSurveysModel()))
+    expect(httpResponse).toEqual(ok(loadSurveysSpy.surveys))
   })
   test('deve retornar 204 se não tiver nenhuma enquete', async () => {
     const { sut, loadSurveysSpy } = makeSut()
-    jest.spyOn(loadSurveysSpy, 'load').mockReturnValueOnce(Promise.resolve([]))
+    loadSurveysSpy.surveys = []
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(noContent())
   })

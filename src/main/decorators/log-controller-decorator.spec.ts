@@ -1,16 +1,15 @@
 import { LogControllerDecorator } from './log-controller-decorator'
 import { HttpRequest } from '@/presentation/protocols'
-import { ok } from '@/presentation/helpers/http/http-helper'
-import { mockAccountModel } from '@/domain/test'
 import { LogErrorRepositorySpy } from '@/data/test'
 import { mockServerError, ControllerSpy } from '@/main/test'
+import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    password: faker.random.word(),
+    passwordConfirmation: faker.random.word()
   }
 })
 
@@ -39,10 +38,10 @@ describe('LogController Decorator', () => {
     expect(controllerSpy.httpRequest).toEqual(httpRequest)
   })
   test('Deve o decorator retornar a mesma resposta do controller', async () => {
-    const { sut } = makeSut()
+    const { sut, controllerSpy } = makeSut()
     const httpRequest = mockRequest()
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(ok(mockAccountModel()))
+    expect(httpResponse).toEqual(controllerSpy.httpResponse)
   })
   test('Deve chamar o LogErrorRepository quando o controller responder com server error', async () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSut()
@@ -50,6 +49,6 @@ describe('LogController Decorator', () => {
     jest.spyOn(controllerSpy, 'handle').mockReturnValueOnce(Promise.resolve(error))
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(logErrorRepositorySpy.stack).toBe('any_stack')
+    expect(logErrorRepositorySpy.stack).toBe(error.body.stack)
   })
 })

@@ -14,7 +14,7 @@ export class AddSurveyRepositorySpy implements AddSurveyRepository {
 }
 
 export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
-  private readonly survey = mockSurveyModel()
+  survey = mockSurveyModel()
   id: string
   async loadById (id: string): Promise<SurveyModel> {
     this.id = id
@@ -23,7 +23,7 @@ export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
 }
 
 export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
-  private readonly surveys = mockSurveysModel()
+  surveys = mockSurveysModel()
   accountId: string
   async loadAll (accountId: string): Promise<SurveyModel[]> {
     this.accountId = accountId

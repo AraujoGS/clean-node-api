@@ -14,7 +14,7 @@ export class HasherSpy implements Hasher {
 }
 
 export class HashComparerSpy implements HashComparer {
-  private readonly isValid: boolean = true
+  isValid: boolean = true
   comparedValue: string
   hash: string
   async compare (value: string, hash: string): Promise<boolean> {
@@ -25,7 +25,7 @@ export class HashComparerSpy implements HashComparer {
 }
 
 export class DecrypterSpy implements Decrypter {
-  private readonly decryptedValue: string = faker.datatype.string(10)
+  decryptedValue: string = faker.datatype.string(10)
   encryptedValue: string
   async decrypt (value: string): Promise<string> {
     this.encryptedValue = value

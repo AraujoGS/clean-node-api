@@ -4,10 +4,11 @@ import { throwError } from '@/domain/test'
 import { forbidden, internalServerError, ok } from '@/presentation/helpers/http/http-helper'
 import { AccessDeniedError } from '@/presentation/errors/access-denied-error'
 import { LoadAccountByTokenSpy } from '@/presentation/test'
+import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
   headers: {
-    'x-access-token': 'any_token'
+    'x-access-token': faker.datatype.uuid()
   }
 })
 
@@ -32,22 +33,23 @@ describe('Auth Middleware', () => {
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
   test('Deve chamar o LoadAccountByToken com o accessToken correto', async () => {
-    const role = 'any_role'
+    const role = faker.datatype.string()
     const { sut, loadAccountByTokenSpy } = makeSut(role)
-    await sut.handle(mockRequest())
-    expect(loadAccountByTokenSpy.accessToken).toBe('any_token')
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(loadAccountByTokenSpy.accessToken).toBe(httpRequest.headers['x-access-token'])
     expect(loadAccountByTokenSpy.role).toBe(role)
   })
   test('Deve retornar 403 se o LoadAccountByToken retornar nulo', async () => {
     const { sut, loadAccountByTokenSpy } = makeSut()
-    jest.spyOn(loadAccountByTokenSpy, 'load').mockReturnValueOnce(Promise.resolve(null))
+    loadAccountByTokenSpy.account = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
   test('Deve retornar 200 se o LoadAccountByToken retornar uma conta', async () => {
-    const { sut } = makeSut()
+    const { sut, loadAccountByTokenSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok({ accountId: 'any_id' }))
+    expect(httpResponse).toEqual(ok({ accountId: loadAccountByTokenSpy.account.id }))
   })
   test('Deve retornar 500 se o LoadAccountByToken lançar uma exceção', async () => {
     const { sut, loadAccountByTokenSpy } = makeSut()

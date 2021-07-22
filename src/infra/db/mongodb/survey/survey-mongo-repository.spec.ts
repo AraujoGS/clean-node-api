@@ -47,8 +47,9 @@ describe('Survey Mongo Repository', () => {
   describe('add()', () => {
     test('Deve adicionar uma enquete com sucesso', async () => {
       const sut = makeSut()
-      await sut.add(mockAddSurveyParams())
-      const survey = await surveyCollection.findOne({ question: 'any_question' })
+      const params = mockAddSurveyParams()
+      await sut.add(params)
+      const survey = await surveyCollection.findOne({ question: params.question })
       expect(survey).toBeTruthy()
     })
   })
@@ -56,7 +57,9 @@ describe('Survey Mongo Repository', () => {
   describe('loadAll()', () => {
     test('Deve retornar uma lista com as enquetes em caso de sucesso', async () => {
       const account = await mockAccount()
-      const result = await surveyCollection.insertMany([mockAddSurveyParams(), mockAddSurveyParams()])
+      const addSurveyParams1 = mockAddSurveyParams()
+      const addSurveyParams2 = mockAddSurveyParams()
+      const result = await surveyCollection.insertMany([addSurveyParams1, addSurveyParams2])
       const survey = result.ops[0]
       await surveyResultCollection.insertOne({
         surveyId: survey._id,
@@ -68,10 +71,10 @@ describe('Survey Mongo Repository', () => {
       const surveys = await sut.loadAll(account.id)
       expect(surveys.length).toBe(2)
       expect(surveys[0].id).toBeTruthy()
-      expect(surveys[0].question).toBe('any_question')
+      expect(surveys[0].question).toBe(addSurveyParams1.question)
       expect(surveys[0].didAnswer).toBe(true)
       expect(surveys[1].id).toBeTruthy()
-      expect(surveys[1].question).toBe('any_question')
+      expect(surveys[1].question).toBe(addSurveyParams2.question)
       expect(surveys[1].didAnswer).toBe(false)
     })
     test('Deve retornar uma lista vazia caso não tenha enquetes', async () => {

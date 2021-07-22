@@ -1,5 +1,5 @@
 import { DbLoadSurveys } from './db-load-surveys'
-import { throwError, mockSurveysModel } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { LoadSurveysRepositorySpy } from '@/data/test'
 import MockDate from 'mockdate'
 import faker from 'faker'
@@ -30,9 +30,9 @@ describe('DbLoadSurveys UseCase', () => {
     expect(loadSurveysRepositorySpy.accountId).toBe(accountId)
   })
   test('deve retornar as enquetes em caso de sucesso', async () => {
-    const { sut } = makeSut()
+    const { sut, loadSurveysRepositorySpy } = makeSut()
     const surveys = await sut.load(faker.datatype.uuid())
-    expect(surveys).toEqual(mockSurveysModel())
+    expect(surveys).toEqual(loadSurveysRepositorySpy.surveys)
   })
   test('deve lançar exceção caso o LoadSurveysRepository de erro', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
