@@ -5,14 +5,13 @@
         "target": "ES2019",//versão do javascript que os arquivos compilados vão ter
         "esModuleInterop": true,//faz com que módulos que utilizem o padrão commonjs(require) sejam usados import/export
         "sourceMap": true,
-        "rootDir": "src",
-        "baseUrl": "src",//pasta raiz onde tenho meu código ts
+        "rootDirs": ["src", "tests"],
+        "baseUrl": "src",
         "paths": {
-            "@/*": ["*"]
+        "@/tests/*": ["../tests/*"],
+        "@/*": ["*"]
         }
     },
-    "include": [
-        "src"
-    ],
+    "include": ["src", "tests"],
     "exclude": []
 }
