@@ -1,8 +1,10 @@
 import { AccountModel } from '@/domain/models'
 
-// Este type está diretamente relacionada a esse use case AddAccount por esse motivo foi colocada no mesmo arquivo.
-export type AddAccountParams = Omit<AccountModel, 'id'> // Classe Utilitaria Omit, permite usar uma classe pronta omitindo uma propriedade especifica
+export namespace AddAccount {
+  export type Params = Omit<AccountModel, 'id'>
+  export type Result = AccountModel
+}
 
-export type AddAccount = {
-  add: (account: AddAccountParams) => Promise<AccountModel>
+export interface AddAccount {
+  add: (params: AddAccount.Params) => Promise<AddAccount.Result>
 }

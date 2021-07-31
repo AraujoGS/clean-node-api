@@ -1,12 +1,15 @@
 import { SurveyResultModel } from '@/domain/models'
 
-export type SaveSurveyResultParams = {
-  surveyId: string
-  accountId: string
-  answer: string
-  date: Date
+export namespace SaveSurveyResult {
+  export type Params = {
+    surveyId: string
+    accountId: string
+    answer: string
+    date: Date
+  }
+  export type Result = SurveyResultModel
 }
 
-export type SaveSurveyResult = {
-  save: (data: SaveSurveyResultParams) => Promise<SurveyResultModel>
+export interface SaveSurveyResult {
+  save: (params: SaveSurveyResult.Params) => Promise<SaveSurveyResult.Result>
 }
