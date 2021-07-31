@@ -1,17 +1,7 @@
 import { LogControllerDecorator } from '@/main/decorators'
-import { HttpRequest } from '@/presentation/protocols'
 import { LogErrorRepositorySpy } from '@/tests/data/mocks'
 import { mockServerError, ControllerSpy } from '@/tests/main/mocks'
 import faker from 'faker'
-
-const mockRequest = (): HttpRequest => ({
-  body: {
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    password: faker.random.word(),
-    passwordConfirmation: faker.random.word()
-  }
-})
 
 type SutTypes = {
   sut: LogControllerDecorator
@@ -33,22 +23,22 @@ const makeSut = (): SutTypes => {
 describe('LogController Decorator', () => {
   test('Deve chamar o handle do controller decorado', async () => {
     const { sut, controllerSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(controllerSpy.httpRequest).toEqual(httpRequest)
+    const request = faker.lorem.sentence()// como é um decorator e o que interessa é que o valor que chega seja repassado corretamente, eu uso qualquer valor
+    await sut.handle(request)
+    expect(controllerSpy.request).toEqual(request)
   })
   test('Deve o decorator retornar a mesma resposta do controller', async () => {
     const { sut, controllerSpy } = makeSut()
-    const httpRequest = mockRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const request = faker.lorem.sentence()
+    const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(controllerSpy.httpResponse)
   })
   test('Deve chamar o LogErrorRepository quando o controller responder com server error', async () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSut()
     const error = mockServerError()
     jest.spyOn(controllerSpy, 'handle').mockReturnValueOnce(Promise.resolve(error))
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
+    const request = faker.lorem.sentence()
+    await sut.handle(request)
     expect(logErrorRepositorySpy.stack).toBe(error.body.stack)
   })
 })

@@ -1,5 +1,4 @@
 import { LoadSurveyResultController } from '@/presentation/controllers'
-import { HttpRequest } from '@/presentation/protocols'
 import { throwError } from '@/tests/domain/mocks'
 import { LoadSurveyByIdSpy, LoadSurveyResultSpy } from '@/tests/presentation/mocks'
 import { InvalidParamError } from '@/presentation/errors'
@@ -7,11 +6,9 @@ import { forbidden, internalServerError, ok } from '@/presentation/helpers'
 import MockDate from 'mockdate'
 import faker from 'faker'
 
-const mockRequest = (): HttpRequest => ({
+const mockRequest = (): LoadSurveyResultController.Request => ({
   accountId: faker.datatype.uuid(),
-  params: {
-    surveyId: faker.datatype.uuid()
-  }
+  surveyId: faker.datatype.uuid()
 })
 
 type SutTypes = {
@@ -38,9 +35,9 @@ describe('LoadSurveyResult Controller', () => {
 
   test('deve chamar o LoadSurveyById com os valores corretos', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadSurveyByIdSpy.id).toBe(httpRequest.params.surveyId)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadSurveyByIdSpy.id).toBe(request.surveyId)
   })
   test('deve retornar 403 se o LoadSurveyById retornar null', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
@@ -56,10 +53,10 @@ describe('LoadSurveyResult Controller', () => {
   })
   test('deve chamar o LoadSurveyResult com os valores corretos', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadSurveyResultSpy.surveyId).toBe(httpRequest.params.surveyId)
-    expect(loadSurveyResultSpy.accountId).toBe(httpRequest.accountId)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadSurveyResultSpy.surveyId).toBe(request.surveyId)
+    expect(loadSurveyResultSpy.accountId).toBe(request.accountId)
   })
   test('deve retornar 500 se o LoadSurveyResult der erro', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()

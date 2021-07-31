@@ -1,5 +1,4 @@
 import { LoginController } from '@/presentation/controllers'
-import { HttpRequest } from '@/presentation/protocols'
 import { throwError } from '@/tests/domain/mocks'
 import { badRequest, internalServerError, ok, unauthorized } from '@/presentation/helpers'
 import { MissingParamError } from '@/presentation/errors'
@@ -7,11 +6,9 @@ import { AuthenticationSpy } from '@/tests/presentation/mocks'
 import { ValidationSpy } from '@/tests/validation/mocks'
 import faker from 'faker'
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    email: faker.internet.email(),
-    password: faker.random.word()
-  }
+const mockRequest = (): LoginController.Request => ({
+  email: faker.internet.email(),
+  password: faker.random.word()
 })
 
 type SutTypes = {
@@ -34,12 +31,9 @@ const makeSut = (): SutTypes => {
 describe('Login Controller', () => {
   test('deve chamar o Authentication com os valores corretos', async () => {
     const { sut, authenticationSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(authenticationSpy.autheticationData).toEqual({
-      email: httpRequest.body.email,
-      password: httpRequest.body.password
-    })
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(authenticationSpy.autheticationData).toEqual(request)
   })
   test('deve retornar 401 quando as credenciais são inválidas', async () => {
     const { sut, authenticationSpy } = makeSut()
@@ -60,15 +54,15 @@ describe('Login Controller', () => {
   })
   test('deve chamar o Validation com os valores corretos, ou seja, o dado que envio no request deve realmente ser utilizado', async () => {
     const { sut, validationSpy } = makeSut()
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(validationSpy.input).toEqual(httpRequest.body)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validationSpy.input).toEqual(request)
   })
   test('deve retornar 400 so o Validation retornar algum erro', async () => {
     const { sut, validationSpy } = makeSut()
     jest.spyOn(validationSpy, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
-    const httpRequest = mockRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const request = mockRequest()
+    const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
