@@ -13,14 +13,14 @@ const makeSut = (): SurveyResultMongoRepository => {
 
 const mockSurvey = async (): Promise<SurveyModel> => {
   const res = await surveyCollection.insertOne({
-    question: 'any_question',
+    question: faker.lorem.sentence,
     answers: [{
-      image: 'any_image',
-      answer: 'any_answer_1'
+      image: faker.image.imageUrl(),
+      answer: faker.lorem.word()
     }, {
-      answer: 'any_answer_2'
+      answer: faker.lorem.word()
     }, {
-      answer: 'any_answer_3'
+      answer: faker.lorem.word()
     }],
     date: new Date()
   })

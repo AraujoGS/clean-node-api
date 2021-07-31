@@ -3,6 +3,7 @@ import { mockAddSurveyParams } from '@/tests/domain/mocks'
 import { AccountModel } from '@/domain/models'
 import { Collection } from 'mongodb'
 import MockDate from 'mockdate'
+import faker from 'faker'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -14,9 +15,9 @@ const makeSut = (): SurveyMongoRepository => {
 
 const mockAccount = async (): Promise<AccountModel> => {
   const res = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password'
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    password: faker.internet.password()
   })
 
   return MongoHelper.map(res.ops[0])
