@@ -16,11 +16,11 @@ export class AuthenticationSpy implements Authentication {
 }
 
 export class AddAccountSpy implements AddAccount {
-  account = mockAccountModel()
+  isValid = true
   accountData: AddAccount.Params
   async add (account: AddAccount.Params): Promise<AddAccount.Result> {
     this.accountData = account
-    return await Promise.resolve(this.account)
+    return await Promise.resolve(this.isValid)
   }
 }
 

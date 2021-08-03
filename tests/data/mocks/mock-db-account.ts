@@ -6,7 +6,7 @@ import { mockAccountModel } from '@/tests/domain/mocks'
 export class AddAccountRepositorySpy implements AddAccountRepository {
   account = mockAccountModel()
   accountParams: AddAccount.Params
-  async add (account: AddAccount.Params): Promise<AddAccount.Result> {
+  async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     this.accountParams = account
     return await Promise.resolve(this.account)
   }

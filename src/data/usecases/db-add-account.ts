@@ -1,6 +1,7 @@
 import { AddAccount } from '@/domain/usecases'
 import { Hasher } from '@/data/protocols/cryptography'
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@/data/protocols/db'
+import { AccountModel } from '@/domain/models'
 /**
  * Implementação do protocolo AddAccount definido no domain, ou seja,
  * implementação da minha regra de negocio. Nesse caso utilizando uma abordagem
@@ -15,11 +16,11 @@ export class DbAddAccount implements AddAccount {
 
   async add (params: AddAccount.Params): Promise<AddAccount.Result> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(params.email)
+    let newAccount: AccountModel = null
     if (!account) {
       const hashedPassword = await this.hasher.hash(params.password)
-      const newAccount = await this.addAccountRepository.add(Object.assign({}, params, { password: hashedPassword }))
-      return newAccount
+      newAccount = await this.addAccountRepository.add(Object.assign({}, params, { password: hashedPassword }))
     }
-    return null
+    return newAccount !== null
   }
 }
