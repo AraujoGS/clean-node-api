@@ -1,5 +1,4 @@
 import { AddSurveyRepository, LoadSurveyByIdRepository, LoadSurveysRepository } from '@/data/protocols/db'
-import { LoadSurveyById, LoadSurveys } from '@/domain/usecases'
 import { mockSurveyModel, mockSurveysModel } from '@/tests/domain/mocks'
 
 export class AddSurveyRepositorySpy implements AddSurveyRepository {
@@ -13,7 +12,7 @@ export class AddSurveyRepositorySpy implements AddSurveyRepository {
 export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
   survey = mockSurveyModel()
   id: string
-  async loadById (id: string): Promise<LoadSurveyById.Result> {
+  async loadById (id: string): Promise<LoadSurveyByIdRepository.Result> {
     this.id = id
     return await Promise.resolve(this.survey)
   }
@@ -22,7 +21,7 @@ export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
 export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
   surveys = mockSurveysModel()
   accountId: string
-  async loadAll (accountId: string): Promise<LoadSurveys.Result> {
+  async loadAll (accountId: string): Promise<LoadSurveysRepository.Result> {
     this.accountId = accountId
     return await Promise.resolve(this.surveys)
   }
