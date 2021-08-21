@@ -1,7 +1,7 @@
-import { LoadAccountByToken } from '@/domain/usecases'
+import { AccountModel } from '@/domain/models'
 
 export namespace LoadAccountByTokenRepository {
-  export type Result = LoadAccountByToken.Result
+  export type Result = AccountModel
 }
 
 export interface LoadAccountByTokenRepository {

@@ -1,7 +1,7 @@
-import { LoadSurveys } from '@/domain/usecases'
+import { SurveyModel } from '@/domain/models'
 
 export namespace LoadSurveysRepository {
-  export type Result = LoadSurveys.Result
+  export type Result = SurveyModel[]
 }
 
 export interface LoadSurveysRepository {
