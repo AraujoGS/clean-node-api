@@ -36,6 +36,10 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
       }, {
         role: 'admin'
       }]
+    }, {
+      projection: { // retornando somente campos específicos
+        _id: 1
+      }
     })
     return account && MongoHelper.map(account)
   }

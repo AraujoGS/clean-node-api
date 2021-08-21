@@ -79,9 +79,6 @@ describe('Account Mongo Repository', () => {
       const account = await sut.loadByToken(accessToken)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(addAccountWithAccessToken.name)
-      expect(account.email).toBe(addAccountWithAccessToken.email)
-      expect(account.password).toBe(addAccountWithAccessToken.password)
     })
     test('Deve retornar uma conta com sucesso no loadByToken com uma role de admin', async () => {
       const sut = makeSut()
@@ -90,9 +87,6 @@ describe('Account Mongo Repository', () => {
       const account = await sut.loadByToken(accessToken, 'admin')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(addAccountWithAccessTokenAndRole.name)
-      expect(account.email).toBe(addAccountWithAccessTokenAndRole.email)
-      expect(account.password).toBe(addAccountWithAccessTokenAndRole.password)
     })
     test('Deve retornar null no loadByToken quando exige role de admin, mas o usuário não possui', async () => {
       const sut = makeSut()
@@ -108,9 +102,6 @@ describe('Account Mongo Repository', () => {
       const account = await sut.loadByToken(accessToken)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(addAccountWithAccessTokenAndRole.name)
-      expect(account.email).toBe(addAccountWithAccessTokenAndRole.email)
-      expect(account.password).toBe(addAccountWithAccessTokenAndRole.password)
     })
     test('Deve retornar um null quando falhar o loadByToken', async () => {
       const sut = makeSut()

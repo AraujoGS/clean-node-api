@@ -1,7 +1,8 @@
-import { AccountModel } from '@/domain/models'
 
 export namespace LoadAccountByTokenRepository {
-  export type Result = AccountModel
+  export type Result = {
+    id: string
+  }
 }
 
 export interface LoadAccountByTokenRepository {

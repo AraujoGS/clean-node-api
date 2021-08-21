@@ -68,7 +68,7 @@ describe('SignUp Controller', () => {
   })
   test('deve retornar 403 se o email já estiver em uso', async () => {
     const { sut, addAccountSpy } = makeSut()
-    addAccountSpy.isValid = false
+    addAccountSpy.result = false
     const request = mockRequest()
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))

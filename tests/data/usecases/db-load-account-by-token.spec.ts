@@ -43,14 +43,14 @@ describe('DbLoadAccountByToken UseCase', () => {
   })
   test('deve retornar null se o LoadAccountByTokenRepository retornar null', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
-    loadAccountByTokenRepositorySpy.account = null
+    loadAccountByTokenRepositorySpy.result = null
     const account = await sut.load(token, role)
     expect(account).toBeNull()
   })
   test('deve retornar a conta se o LoadAccountByTokenRepository retornar alguma coisa', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     const account = await sut.load(token, role)
-    expect(account).toEqual(loadAccountByTokenRepositorySpy.account)
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.result)
   })
   test('deve retornar null caso seja lançada exceção no Decrypter', async () => {
     const { sut, decrypterSpy } = makeSut()
