@@ -29,13 +29,8 @@ describe('Account Mongo Repository', () => {
     test('Deve retornar uma conta com sucesso no add', async () => {
       const sut = makeSut()
       const params = mockAddAccountParams()
-      const account = await sut.add(params)
-
-      expect(account).toBeTruthy()
-      expect(account.id).toBeTruthy() // Não estamos mockando o mongo então pra mim caso retorne um id, eu considero válido
-      expect(account.name).toBe(params.name)
-      expect(account.email).toBe(params.email)
-      expect(account.password).toBe(params.password)
+      const isValid = await sut.add(params)
+      expect(isValid).toBeTruthy()
     })
   })
 
@@ -49,7 +44,6 @@ describe('Account Mongo Repository', () => {
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe(params.name)
-      expect(account.email).toBe(params.email)
       expect(account.password).toBe(params.password)
     })
     test('Deve retornar um null quando falhar o loadByEmail', async () => {

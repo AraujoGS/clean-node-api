@@ -1,7 +1,9 @@
-import { AccountModel } from '@/domain/models'
-
 export namespace LoadAccountByEmailRepository {
-  export type Result = AccountModel
+  export type Result = {
+    id: string
+    name: string
+    password: string
+  }
 }
 
 export interface LoadAccountByEmailRepository {

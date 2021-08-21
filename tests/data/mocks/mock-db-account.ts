@@ -1,23 +1,26 @@
 import { AddAccountRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository } from '@/data/protocols/db'
-import { AddAccount } from '@/domain/usecases'
-import { mockAccountModel } from '@/tests/domain/mocks'
 import faker from 'faker'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
-  account = mockAccountModel()
-  accountParams: AddAccount.Params
+  result = true
+  accountParams: AddAccountRepository.Params
   async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     this.accountParams = account
-    return await Promise.resolve(this.account)
+    return await Promise.resolve(this.result)
   }
 }
 
 export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
-  account = mockAccountModel()
+  result = {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    password: faker.datatype.string()
+  }
+
   email: string
   async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
     this.email = email
-    return await Promise.resolve(this.account)
+    return await Promise.resolve(this.result)
   }
 }
 

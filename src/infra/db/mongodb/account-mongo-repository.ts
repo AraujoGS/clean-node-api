@@ -6,12 +6,20 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const [account] = result.ops
-    return MongoHelper.map(account)
+    return account !== null
   }
 
   async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const account = await accountCollection.findOne({ email })
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1,
+        name: 1,
+        password: 1
+      }
+    })
     return account && MongoHelper.map(account)
   }
 

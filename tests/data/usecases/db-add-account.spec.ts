@@ -1,6 +1,7 @@
 import { DbAddAccount } from '@/data/usecases'
-import { mockAccountModel, mockAddAccountParams, throwError } from '@/tests/domain/mocks'
+import { mockAddAccountParams, throwError } from '@/tests/domain/mocks'
 import { HasherSpy, AddAccountRepositorySpy, LoadAccountByEmailRepositorySpy } from '@/tests/data/mocks'
+import faker from 'faker'
 
 type SutTypes = {
   sut: DbAddAccount
@@ -13,7 +14,7 @@ const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
   const addAccountRepositorySpy = new AddAccountRepositorySpy()
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
-  loadAccountByEmailRepositorySpy.account = null
+  loadAccountByEmailRepositorySpy.result = null
   const sut = new DbAddAccount(
     hasherSpy,
     addAccountRepositorySpy,
@@ -69,9 +70,20 @@ describe('DbAddAccount Usecase', () => {
     const isValid = await sut.add(accountData)
     expect(isValid).toBe(true)
   })
+  test('Deve retornar false caso a conta não seja criada com caso de sucesso', async () => {
+    const { sut, addAccountRepositorySpy } = makeSut()
+    addAccountRepositorySpy.result = false
+    const accountData = mockAddAccountParams()
+    const isValid = await sut.add(accountData)
+    expect(isValid).toBe(false)
+  })
   test('deve retornar false caso o LoadAccountByEmailRepository retorne null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail').mockReturnValueOnce(Promise.resolve(mockAccountModel()))
+    loadAccountByEmailRepositorySpy.result = {
+      id: faker.datatype.uuid(),
+      name: faker.name.findName(),
+      password: faker.datatype.string()
+    }
     const isValid = await sut.add(mockAddAccountParams())
     expect(isValid).toBe(false)
   })
