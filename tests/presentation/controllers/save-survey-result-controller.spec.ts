@@ -2,7 +2,7 @@ import { SaveSurveyResultController } from '@/presentation/controllers'
 import { throwError } from '@/tests/domain/mocks'
 import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, internalServerError, ok } from '@/presentation/helpers'
-import { LoadSurveyByIdSpy, SaveSurveyResultSpy } from '@/tests/presentation/mocks'
+import { LoadAnswersBySurveySpy, SaveSurveyResultSpy } from '@/tests/presentation/mocks'
 import MockDate from 'mockdate'
 import faker from 'faker'
 
@@ -14,17 +14,17 @@ const mockRequest = (answer: string): SaveSurveyResultController.Request => ({
 
 type SutTypes = {
   sut: SaveSurveyResultController
-  loadSurveyByIdSpy: LoadSurveyByIdSpy
+  loadAnswersBySurveySpy: LoadAnswersBySurveySpy
   saveSurveyResultSpy: SaveSurveyResultSpy
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveyByIdSpy = new LoadSurveyByIdSpy()
+  const loadAnswersBySurveySpy = new LoadAnswersBySurveySpy()
   const saveSurveyResultSpy = new SaveSurveyResultSpy()
-  const sut = new SaveSurveyResultController(loadSurveyByIdSpy, saveSurveyResultSpy)
+  const sut = new SaveSurveyResultController(loadAnswersBySurveySpy, saveSurveyResultSpy)
   return {
     sut,
-    loadSurveyByIdSpy,
+    loadAnswersBySurveySpy,
     saveSurveyResultSpy
   }
 }
@@ -34,16 +34,16 @@ describe('SaveSurveyResult Controller', () => {
 
   afterAll(() => MockDate.reset())
 
-  test('deve chamar o LoadSurveyById com os valores corretos', async () => {
-    const { sut, loadSurveyByIdSpy } = makeSut()
+  test('deve chamar o LoadAnswersBySurvey com os valores corretos', async () => {
+    const { sut, loadAnswersBySurveySpy } = makeSut()
     const request = mockRequest(faker.datatype.string())
     await sut.handle(request)
-    expect(loadSurveyByIdSpy.id).toBe(request.surveyId)
+    expect(loadAnswersBySurveySpy.id).toBe(request.surveyId)
   })
-  test('deve retornar 403 se o LoadSurveyById retornar nulo', async () => {
-    const { sut, loadSurveyByIdSpy } = makeSut()
+  test('deve retornar 403 se o LoadAnswersBySurvey retornar um array vazio', async () => {
+    const { sut, loadAnswersBySurveySpy } = makeSut()
     const request = mockRequest(faker.datatype.string())
-    loadSurveyByIdSpy.survey = null
+    loadAnswersBySurveySpy.result = []
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
@@ -57,16 +57,16 @@ describe('SaveSurveyResult Controller', () => {
     })
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))
   })
-  test('deve retornar 500 caso o LoadSurveyById lance exceção', async () => {
-    const { sut, loadSurveyByIdSpy } = makeSut()
+  test('deve retornar 500 caso o LoadAnswersBySurvey lance exceção', async () => {
+    const { sut, loadAnswersBySurveySpy } = makeSut()
     const request = mockRequest(faker.datatype.string())
-    jest.spyOn(loadSurveyByIdSpy, 'loadById').mockImplementationOnce(throwError)
+    jest.spyOn(loadAnswersBySurveySpy, 'loadAnswers').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(internalServerError(new Error()))
   })
   test('deve chamar o SaveSurveyResult com os valores corretos', async () => {
-    const { sut, saveSurveyResultSpy, loadSurveyByIdSpy } = makeSut()
-    const request = mockRequest(loadSurveyByIdSpy.survey.answers[0].answer)
+    const { sut, saveSurveyResultSpy, loadAnswersBySurveySpy } = makeSut()
+    const request = mockRequest(loadAnswersBySurveySpy.result[0])
     await sut.handle(request)
     expect(saveSurveyResultSpy.saveSurveyResultData).toEqual({
       surveyId: request.surveyId,
@@ -76,20 +76,20 @@ describe('SaveSurveyResult Controller', () => {
     })
   })
   test('deve retornar 500 caso o SaveSurveyResult lance exceção', async () => {
-    const { sut, saveSurveyResultSpy, loadSurveyByIdSpy } = makeSut()
+    const { sut, saveSurveyResultSpy, loadAnswersBySurveySpy } = makeSut()
     jest.spyOn(saveSurveyResultSpy, 'save').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({
-      surveyId: loadSurveyByIdSpy.survey.id,
-      answer: loadSurveyByIdSpy.survey.answers[0].answer,
+      surveyId: loadAnswersBySurveySpy.id,
+      answer: loadAnswersBySurveySpy.result[0],
       accountId: faker.datatype.uuid()
     })
     expect(httpResponse).toEqual(internalServerError(new Error()))
   })
   test('deve retornar 200 em caso de sucesso', async () => {
-    const { sut, saveSurveyResultSpy, loadSurveyByIdSpy } = makeSut()
+    const { sut, saveSurveyResultSpy, loadAnswersBySurveySpy } = makeSut()
     const httpResponse = await sut.handle({
-      surveyId: loadSurveyByIdSpy.survey.id,
-      answer: loadSurveyByIdSpy.survey.answers[0].answer,
+      surveyId: loadAnswersBySurveySpy.id,
+      answer: loadAnswersBySurveySpy.result[0],
       accountId: faker.datatype.uuid()
     })
     expect(httpResponse).toEqual(ok(saveSurveyResultSpy.surveyResult))
