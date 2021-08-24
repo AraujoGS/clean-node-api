@@ -111,4 +111,21 @@ describe('Survey Mongo Repository', () => {
       expect(exists).toBe(false)
     })
   })
+
+  describe('loadAnswers()', () => {
+    test('Deve retornar os answers em caso de sucesso', async () => {
+      const survey = mockAddSurveyParams()
+      const res = await surveyCollection.insertOne(survey)
+      const id = res.ops[0]._id
+      const sut = makeSut()
+      const answers = await sut.loadAnswers(id)
+      expect(answers).toEqual([survey.answers[0].answer])
+    })
+    test('Deve retornar um array vazio caso o survey não exista', async () => {
+      const sut = makeSut()
+      const fakeId = new FakeObjectId()
+      const answers = await sut.loadAnswers(fakeId.id)
+      expect(answers).toEqual([])
+    })
+  })
 })
