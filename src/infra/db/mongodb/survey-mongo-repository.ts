@@ -61,13 +61,16 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
 
   async loadAnswers (id: string): Promise<LoadAnswersBySurveyRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
-    const survey = await surveyCollection.findOne({
-      _id: new ObjectId(id)
-    }, {
-      projection: {
-        answers: 1
-      }
-    })
-    return survey?.answers.map(item => item.answer) || []
+    const query = new QueryBuilder()
+      .match({
+        _id: new ObjectId(id)
+      })
+      .project({
+        _id: 0,
+        answers: '$answers.answer'
+      })
+      .build()
+    const [survey] = await surveyCollection.aggregate(query).toArray()
+    return survey?.answers || []
   }
 }

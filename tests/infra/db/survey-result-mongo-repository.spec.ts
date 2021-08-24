@@ -16,11 +16,11 @@ const mockSurvey = async (): Promise<SurveyModel> => {
     question: faker.lorem.sentence,
     answers: [{
       image: faker.image.imageUrl(),
-      answer: faker.lorem.word()
+      answer: faker.random.word()
     }, {
       answer: faker.lorem.word()
     }, {
-      answer: faker.lorem.word()
+      answer: faker.datatype.string()
     }],
     date: new Date()
   })

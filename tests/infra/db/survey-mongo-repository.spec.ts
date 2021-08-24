@@ -94,6 +94,12 @@ describe('Survey Mongo Repository', () => {
       expect(survey).toBeTruthy()
       expect(survey.id).toBeTruthy()
     })
+    test('Deve retornar null caso a enquete não exista', async () => {
+      const sut = makeSut()
+      const fakeId = new FakeObjectId()
+      const survey = await sut.loadById(fakeId.id)
+      expect(survey).toBeNull()
+    })
   })
 
   describe('checkById()', () => {

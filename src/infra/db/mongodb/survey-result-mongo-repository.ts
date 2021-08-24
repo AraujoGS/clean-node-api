@@ -59,7 +59,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
         },
         currentAccountAnswer: {
           $push: {
-            $cond: [{ $eq: ['$data.accountId', new ObjectId(accountId)] }, '$data.answer', null]
+            $cond: [{ $eq: ['$data.accountId', accountId] }, '$data.answer', '$invalid']
           }
         }
       })
@@ -96,8 +96,12 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                     else: 0
                   }
                 },
-                isCurrentAccountAnswer: {
-                  $eq: ['$$item.answer', { $arrayElemAt: ['$currentAccountAnswer', 0] }]
+                isCurrentAccountAnswerCount: {
+                  $cond: [{
+                    $eq: ['$$item.answer', {
+                      $arrayElemAt: ['$currentAccountAnswer', 0]
+                    }]
+                  }, 1, 0]
                 }
               }]
             }
@@ -138,14 +142,16 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
           question: '$question',
           date: '$date',
           answer: '$answers.answer',
-          image: '$answers.image',
-          isCurrentAccountAnswer: '$answers.isCurrentAccountAnswer'
+          image: '$answers.image'
         },
         count: {
           $sum: '$answers.count'
         },
         percent: {
           $sum: '$answers.percent'
+        },
+        isCurrentAccountAnswerCount: {
+          $sum: '$answers.isCurrentAccountAnswerCount'
         }
       })
       .project({
@@ -162,11 +168,13 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
           percent: {
             $round: ['$percent']
           },
-          isCurrentAccountAnswer: '$_id.isCurrentAccountAnswer'
+          isCurrentAccountAnswer: {
+            $eq: ['$isCurrentAccountAnswerCount', 1]
+          }
         }
       })
       .sort({
-        'answer.count': -1 // decrescente, ou seja, da resposta com mais valores para a com menos.
+        'answer.count': -1
       })
       .group({
         _id: {
