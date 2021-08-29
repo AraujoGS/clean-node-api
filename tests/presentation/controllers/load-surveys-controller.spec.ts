@@ -35,11 +35,11 @@ describe('LoadSurveys Controller', () => {
   test('deve retornar 200 em caso de sucesso', async () => {
     const { sut, loadSurveysSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(loadSurveysSpy.surveys))
+    expect(httpResponse).toEqual(ok(loadSurveysSpy.result))
   })
   test('deve retornar 204 se não tiver nenhuma enquete', async () => {
     const { sut, loadSurveysSpy } = makeSut()
-    loadSurveysSpy.surveys = []
+    loadSurveysSpy.result = []
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(noContent())
   })

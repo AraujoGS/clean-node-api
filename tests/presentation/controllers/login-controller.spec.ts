@@ -37,7 +37,7 @@ describe('Login Controller', () => {
   })
   test('deve retornar 401 quando as credenciais são inválidas', async () => {
     const { sut, authenticationSpy } = makeSut()
-    authenticationSpy.authenticationModel = null
+    authenticationSpy.result = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
@@ -50,7 +50,7 @@ describe('Login Controller', () => {
   test('deve retornar 200 quando as credenciais são válidas', async () => {
     const { sut, authenticationSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(authenticationSpy.authenticationModel))
+    expect(httpResponse).toEqual(ok(authenticationSpy.result))
   })
   test('deve chamar o Validation com os valores corretos, ou seja, o dado que envio no request deve realmente ser utilizado', async () => {
     const { sut, validationSpy } = makeSut()

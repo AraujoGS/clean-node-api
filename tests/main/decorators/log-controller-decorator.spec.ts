@@ -31,7 +31,7 @@ describe('LogController Decorator', () => {
     const { sut, controllerSpy } = makeSut()
     const request = faker.lorem.sentence()
     const httpResponse = await sut.handle(request)
-    expect(httpResponse).toEqual(controllerSpy.httpResponse)
+    expect(httpResponse).toEqual(controllerSpy.result)
   })
   test('Deve chamar o LogErrorRepository quando o controller responder com server error', async () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSut()

@@ -48,21 +48,21 @@ describe('DbLoadSurveyResult UseCase', () => {
   })
   test('deve chamar o LoadSurveyByIdRepository quando o LoadSurveyResultRepository retornar null', async () => {
     const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } = makeSut()
-    loadSurveyResultRepositorySpy.surveyResult = null
+    loadSurveyResultRepositorySpy.result = null
     await sut.load(surveyId, accountId)
     expect(loadSurveyByIdRepositorySpy.id).toBe(surveyId)
   })
   test('deve lançar exceção caso algum erro aconteça no LoadSurveyByIdRepository', async () => {
     const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } = makeSut()
-    loadSurveyResultRepositorySpy.surveyResult = null
+    loadSurveyResultRepositorySpy.result = null
     jest.spyOn(loadSurveyByIdRepositorySpy, 'loadById').mockImplementationOnce(throwError)
     const promise = sut.load(surveyId, accountId)
     await expect(promise).rejects.toThrow()
   })
   test('deve retornar as respostas com count e percent 0 quando não existem respostas', async () => {
     const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } = makeSut()
-    loadSurveyResultRepositorySpy.surveyResult = null
-    const survey = loadSurveyByIdRepositorySpy.survey
+    loadSurveyResultRepositorySpy.result = null
+    const survey = loadSurveyByIdRepositorySpy.result
     const surveyResult = await sut.load(surveyId, accountId)
     expect(surveyResult).toEqual({
       surveyId,
@@ -74,6 +74,6 @@ describe('DbLoadSurveyResult UseCase', () => {
   test('deve retornar as respostas da enquete', async () => {
     const { sut, loadSurveyResultRepositorySpy } = makeSut()
     const surveyResult = await sut.load(surveyId, accountId)
-    expect(surveyResult).toEqual(loadSurveyResultRepositorySpy.surveyResult)
+    expect(surveyResult).toEqual(loadSurveyResultRepositorySpy.result)
   })
 })

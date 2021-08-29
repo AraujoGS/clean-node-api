@@ -11,11 +11,11 @@ export class AddSurveyRepositorySpy implements AddSurveyRepository {
 }
 
 export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
-  survey = mockSurveyModel()
+  result = mockSurveyModel()
   id: string
   async loadById (id: string): Promise<LoadSurveyByIdRepository.Result> {
     this.id = id
-    return await Promise.resolve(this.survey)
+    return await Promise.resolve(this.result)
   }
 }
 
@@ -38,10 +38,10 @@ export class CheckSurveyByIdRepositorySpy implements CheckSurveyByIdRepository {
 }
 
 export class LoadSurveysRepositorySpy implements LoadSurveysRepository {
-  surveys = mockSurveysModel()
+  result = mockSurveysModel()
   accountId: string
   async loadAll (accountId: string): Promise<LoadSurveysRepository.Result> {
     this.accountId = accountId
-    return await Promise.resolve(this.surveys)
+    return await Promise.resolve(this.result)
   }
 }

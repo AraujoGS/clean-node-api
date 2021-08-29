@@ -92,6 +92,6 @@ describe('SaveSurveyResult Controller', () => {
       answer: loadAnswersBySurveySpy.result[0],
       accountId: faker.datatype.uuid()
     })
-    expect(httpResponse).toEqual(ok(saveSurveyResultSpy.surveyResult))
+    expect(httpResponse).toEqual(ok(saveSurveyResultSpy.result))
   })
 })

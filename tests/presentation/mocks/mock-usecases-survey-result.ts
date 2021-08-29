@@ -21,21 +21,21 @@ export class CheckSurveyByIdSpy implements CheckSurveyById {
 }
 
 export class SaveSurveyResultSpy implements SaveSurveyResult {
-  surveyResult = mockSurveyResultModel()
+  result = mockSurveyResultModel()
   saveSurveyResultData: SaveSurveyResult.Params
   async save (data: SaveSurveyResult.Params): Promise<SaveSurveyResult.Result> {
     this.saveSurveyResultData = data
-    return await Promise.resolve(this.surveyResult)
+    return await Promise.resolve(this.result)
   }
 }
 
 export class LoadSurveyResultSpy implements LoadSurveyResult {
-  surveyResult = mockSurveyResultModel()
+  result = mockSurveyResultModel()
   surveyId: string
   accountId: string
   async load (surveyId: string, accountId: string): Promise<LoadSurveyResult.Result> {
     this.surveyId = surveyId
     this.accountId = accountId
-    return await Promise.resolve(this.surveyResult)
+    return await Promise.resolve(this.result)
   }
 }

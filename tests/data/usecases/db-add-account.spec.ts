@@ -50,7 +50,7 @@ describe('DbAddAccount Usecase', () => {
     expect(addAccountRepositorySpy.accountParams).toEqual({
       name: accountData.name,
       email: accountData.email,
-      password: hasherSpy.hashedPassword
+      password: hasherSpy.result
     })
   })
   test('Deve lançar qualquer exceção que ocorra no addAccountRepository e não tratar na classe', async () => {

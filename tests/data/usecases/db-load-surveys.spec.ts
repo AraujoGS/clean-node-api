@@ -32,7 +32,7 @@ describe('DbLoadSurveys UseCase', () => {
   test('deve retornar as enquetes em caso de sucesso', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
     const surveys = await sut.load(faker.datatype.uuid())
-    expect(surveys).toEqual(loadSurveysRepositorySpy.surveys)
+    expect(surveys).toEqual(loadSurveysRepositorySpy.result)
   })
   test('deve lançar exceção caso o LoadSurveysRepository de erro', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()

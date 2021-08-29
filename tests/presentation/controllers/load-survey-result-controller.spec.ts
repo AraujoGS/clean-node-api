@@ -67,6 +67,6 @@ describe('LoadSurveyResult Controller', () => {
   test('deve retornar 200 em caso de sucesso', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(loadSurveyResultSpy.surveyResult))
+    expect(httpResponse).toEqual(ok(loadSurveyResultSpy.result))
   })
 })

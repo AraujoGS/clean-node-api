@@ -2,7 +2,7 @@ import { AddAccount, Authentication, LoadAccountByToken } from '@/domain/usecase
 import faker from 'faker'
 
 export class AuthenticationSpy implements Authentication {
-  authenticationModel = {
+  result = {
     accessToken: faker.datatype.string(8),
     name: faker.name.findName()
   }
@@ -10,7 +10,7 @@ export class AuthenticationSpy implements Authentication {
   autheticationData: Authentication.Params
   async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
     this.autheticationData = authentication
-    return await Promise.resolve(this.authenticationModel)
+    return await Promise.resolve(this.result)
   }
 }
 
