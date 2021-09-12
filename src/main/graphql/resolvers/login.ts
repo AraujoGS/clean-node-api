@@ -1,8 +1,12 @@
 import { adaptResolvers } from '@/main/adapters/apollo-server-resolvers-adapter'
-import { makeLoginController } from '@/main/factories/controllers'
+import { makeLoginController, makeSignUpController } from '@/main/factories/controllers'
 
 export default {
   Query: {
-    login: (parent: any, args: any): any => adaptResolvers(makeLoginController(), args)
+    login: async (parent: any, args: any) => await adaptResolvers(makeLoginController(), args)
+  },
+
+  Mutation: {
+    signUp: async (parent: any, args: any) => await adaptResolvers(makeSignUpController(), args)
   }
 }
