@@ -24,8 +24,8 @@ const mockSurvey = async (): Promise<SurveyModel> => {
     }],
     date: new Date()
   })
-
-  return MongoHelper.map(res.ops[0])
+  const survey = await surveyCollection.findOne({ _id: res.insertedId })
+  return MongoHelper.map(survey)
 }
 
 const mockAccountId = async (): Promise<string> => {
@@ -35,7 +35,7 @@ const mockAccountId = async (): Promise<string> => {
     password: faker.random.words()
   })
 
-  return res.ops[0]._id
+  return res.insertedId.toHexString()
 }
 
 describe('Survey Result Mongo Repository', () => {
@@ -49,11 +49,11 @@ describe('Survey Result Mongo Repository', () => {
 
   beforeEach(async () => {
     // antes de cada teste limpo a base de dados
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
-    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    surveyResultCollection = MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.deleteMany({})
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -69,8 +69,8 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       const surveyResult = await surveyResultCollection.findOne({
-        surveyId: survey.id,
-        accountId
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(accountId)
       })
       expect(surveyResult).toBeTruthy()
     })
@@ -91,8 +91,8 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       const surveyResult = await surveyResultCollection.find({
-        surveyId: survey.id,
-        accountId
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(accountId)
       }).toArray()
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.length).toBe(1)

@@ -17,9 +17,9 @@ describe('Survey Routes', () => {
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('surveys')
+    surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -42,7 +42,7 @@ describe('Survey Routes', () => {
         }],
         date: new Date()
       })
-      const id: string = res.ops[0]._id
+      const id: string = res.insertedId.toHexString()
       await request(app)
         .put(`/api/surveys/${id}/results`)
         .set('x-access-token', accessToken)
@@ -68,7 +68,7 @@ describe('Survey Routes', () => {
         }],
         date: new Date()
       })
-      const id: string = res.ops[0]._id
+      const id: string = res.insertedId.toHexString()
       await request(app)
         .get(`/api/surveys/${id}/results`)
         .set('x-access-token', accessToken)

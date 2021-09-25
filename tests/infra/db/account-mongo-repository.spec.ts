@@ -16,7 +16,7 @@ describe('Account Mongo Repository', () => {
 
   beforeEach(async () => {
     // antes de cada teste limpo a base de dados
-    accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
     accessToken = faker.datatype.uuid()
   })
@@ -72,7 +72,8 @@ describe('Account Mongo Repository', () => {
   describe('updateAccessToken()', () => {
     test('Deve atualizar o accessToken de uma conta com sucesso no updateAccessToken', async () => {
       const sut = makeSut()
-      const { ops: [result] } = await accountCollection.insertOne(mockAddAccountParams())
+      const res = await accountCollection.insertOne(mockAddAccountParams())
+      const result = await accountCollection.findOne({ _id: res.insertedId })
       expect(result.accessToken).toBeFalsy()
       await sut.updateAccessToken(result._id, 'any_token')
       const account = await accountCollection.findOne({ _id: result._id })

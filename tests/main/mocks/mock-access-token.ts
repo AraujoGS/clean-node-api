@@ -10,10 +10,10 @@ export const mockAccessToken = async (collection: Collection): Promise<string> =
     password: faker.random.alphaNumeric(),
     role: 'admin'
   })
-  const id = res.ops[0]._id
+  const id = res.insertedId.toHexString()
   const accessToken = sign({ id }, env.jwtSecret)
   await collection.updateOne({
-    _id: id
+    _id: res.insertedId
   }, {
     $set: {
       accessToken
