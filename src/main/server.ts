@@ -10,6 +10,7 @@ import { MongoHelper } from '@/infra/db'
 MongoHelper.connect(env.mongoUri)
   .then(async () => {
     // somente após conectar no mongodb dou listen no meu servidor.
-    const app = (await import('./config/app')).default
+    const { setupApp } = await import('./config/app')
+    const app = await setupApp()
     app.listen(env.port, () => console.log(`server running at http://localhost:${env.port}`))
   }).catch(console.error)
