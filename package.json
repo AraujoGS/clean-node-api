@@ -11,7 +11,7 @@
     "up": "npm run build && docker-compose up -d",
     "down": "docker-compose down",
     "check": "npm-check -u -s",
-    "test": "jest --passWithNoTests --no-cache --silent --noStackTrace --runInBand",
+    "test": "jest --passWithNoTests --no-cache --silent --noStackTrace --runInBand --testTimeout=120000",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
