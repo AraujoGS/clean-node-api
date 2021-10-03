@@ -6,6 +6,8 @@ module.exports = {
     '!<rootDir>/src/main/docs/**',
     '!<rootDir>/src/main/adapters/**',
     '!<rootDir>/src/main/server.ts',
+    '!<rootDir>/src/main/graphql/apollo/**',
+    '!<rootDir>/src/main/graphql/directives/**',
     '!<rootDir>/src/**/*-protocols.ts',
     '!<rootDir>/**/protocols/**'
   ], // Quero cobertura de teste em todos os arquivos dentro de src e que sejam ts
